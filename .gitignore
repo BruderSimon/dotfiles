@@ -1,0 +1,9 @@
+*.mkv
+*.*~
+*.exe
+/.git
+*.*#
+*.#*
+*.aux
+*.log
+*.synctex.gz

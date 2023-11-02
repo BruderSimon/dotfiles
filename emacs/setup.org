@@ -1,0 +1,42 @@
+
+#+LaTeX_CLASS: org-plain-latex
+
+#+LaTeX_CLASS_OPTIONS: [a4paper, 11pt]
+%#+LATEX_HEADER: \usepackage{lmodern} % Ensures we have the right font
+
+%For code segments
+#+LATEX_HEADER: \usepackage{listings}
+
+% Font I guess
+#+LATEX_HEADER: \usepackage{lmodern} % Ensures we have the right font
+#+LATEX_HEADER: {\fontsize{11}{11} \selectfont}
+
+%Encoding
+#+LATEX_HEADER: \usepackage[AUTO]{inputenc}
+
+#+LATEX_HEADER: \usepackage{graphicx}
+#+LATEX_HEADER: \usepackage{amsmath, amsthm, amssymb}
+#+LATEX_HEADER: \usepackage{amsfonts}
+#+LATEX_HEADER: \usepackage[table, xcdraw]{xcolor}
+#+LATEX_HEADER: \usepackage{csquotes}
+#+LATEX_HEADER: \usepackage{acronym}
+#+LATEX_HEADER: \usepackage{multirow}
+
+%Layout
+#+LATEX_HEADER: \usepackage{geometry}
+#+LATEX_HEADER: \geometry{left=2.5cm,right=2.5cm,top = 2cm,bottom = 2cm}
+
+% Colorizing links in a nicer way.
+#+LATEX_HEADER: \usepackage[colorlinks=false,linkcolor=black, urlcolor=black]{hyperref}
+
+%Title
+#+LATEX_HEADER: \usepackage{titling}
+#+LATEX_HEADER: \pretitle{\begin{center}\centering \vspace*{\fill} \huge\bfseriese}
+#+LATEX_HEADER: \posttitle{\par\end{center}}
+%Author
+#+LATEX_HEADER: \preauthor{\begin{center}\vspace{6bp}\fontsize{14pt}{14pt}\selectfont}
+#+LATEX_HEADER: \postauthor{\par\end{center}}
+%Date
+#+LATEX_HEADER: \predate{\begin{center}\large}
+#+LATEX_HEADER: \postdate{\par\end{center}\vspace*{\fill}}
+
