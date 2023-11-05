@@ -73,6 +73,11 @@
 (add-hook 'c-mode-hook 'eglot-ensure)
 (add-hook 'c++-mode-hook 'eglot-ensure)
 
+;; Other Hooks for Programming
+(add-hook 'c-mode-hook #'company-mode)
+(add-hook 'c++-mode-hook #'company-mode)
+(add-hook 'cmake-mode-hook #'company-mode)
+
 ;;Language Tool
 (setq langtool-language-tool-jar "D:/Programme/LanguageTool-6.3/languagetool-commandline.jar")
 (require 'langtool)
