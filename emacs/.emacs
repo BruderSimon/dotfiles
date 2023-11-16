@@ -39,6 +39,9 @@
 
 (column-number-mode)
 
+;; Don't create backupfiles
+(setq make-backup-files nil)
+
 ;; Enable line numbers for some modes
 (dolist (mode '(text-mode-hook
                 prog-mode-hook
@@ -82,6 +85,7 @@
 (setq langtool-language-tool-jar "D:/Programme/LanguageTool-6.3/languagetool-commandline.jar")
 (require 'langtool)
 (require 'langtool-popup)
+(setq langtool-default-language "en-GB")
 
 ;; Auctex
 (use-package auctex
@@ -126,7 +130,7 @@
   (insert "#+TITLE:
 #+SUBTITLE: Winter Semester 2023/24
 #+AUTHOR: Simon Engel
-#+SETUPFILE: c:/Users/66che/AppData/Roaming/.config/emacs/setup.org")
+#+SETUPFILE: D:/Programme/.config/emacs/setup.org")
   (backward-char))
 
 (global-set-key (kbd "M-#") #'my/latex-org-export)
