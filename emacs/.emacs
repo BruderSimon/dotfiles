@@ -1,4 +1,4 @@
-;; (setq inhibit-startup-message t) ;remove starting screen
+;;(setq inhibit-startup-message t) ;remove starting screen
 
 (scroll-bar-mode -1)        ; Disable visible scrollbar
 (tool-bar-mode -1)          ; Disable the toolbar
@@ -134,6 +134,14 @@
   (backward-char))
 
 (global-set-key (kbd "M-#") #'my/latex-org-export)
+
+;; Recent files
+(require 'recentf)
+(setq recentf-max-saved-items 200
+      recentf-max-menu-items 15)
+(recentf-mode +1)
+(add-hook 'after-init-hook 'recentf-open-files)
+;;(initial-buffer-choice 'recentf-open-files)
 
 (custom-set-variables
  ;; custom-set-variables was added by Custom.
