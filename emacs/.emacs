@@ -1,4 +1,5 @@
-;;(setq inhibit-startup-message t) ;remove starting screen
+;; (setq inhibit-startup-message t) ;remove starting screen
+
 
 (scroll-bar-mode -1)        ; Disable visible scrollbar
 (tool-bar-mode -1)          ; Disable the toolbar
@@ -6,6 +7,16 @@
 (set-fringe-mode 10)        ; Give some breathing room
 
 (menu-bar-mode -1)            ; Disable the menu bar
+
+;; Path Variables for better maintainance
+(setq local-ditaa-path "C:\\Programms\\ditaa\\ditaa0_9.jar")
+(setq local-ditaa-eps-path  "C:\\Programms\\ditaa\\DitaaEps.jar")
+(setq local-langtool-path "C:/Programms/LanguageTool-6.3/languagetool-commandline.jar")
+(setq local-reveal-js-path "file:///C:/Programms/reveal.js")
+
+;; Abbreviations
+(setq-default abbrev-mode t)
+(define-abbrev global-abbrev-table "$SetupPath$" "C:/Users/Simon/AppData/Roaming/.config/emacs/setup.org")
 
 ;; Initialize package sources
 (require 'package)
@@ -19,7 +30,7 @@
 
 ;; Initialize use-package on non-Linux platforms
 (unless (package-installed-p 'use-package)
-  (package-install 'use-package))
+   (package-install 'use-package))
 
 (require 'use-package)
 (setq use-package-always-ensure t)
@@ -70,6 +81,7 @@
 (setq load-path (cons (expand-file-name "/dir/with/cmake-mode") load-path))
 (use-package cmake-mode)
 
+
 ;;eglot
 (use-package eglot
   :ensure t)
@@ -89,7 +101,7 @@
 (use-package langtool
   :ensure t
   :init
-  (setq langtool-language-tool-jar "D:/Programme/LanguageTool-6.3/languagetool-commandline.jar")
+  (setq langtool-language-tool-jar local-langtool-path)
   (setq langtool-default-language "en-GB"))
 
 ;; Auctex
@@ -152,7 +164,7 @@
 (defun my/latex-org-export ()
   (interactive)
   (insert "#+TITLE:
-#+SUBTITLE: Winter Semester 2023/24
+#+SUBTITLE: Summer Semester 2024
 #+AUTHOR: Simon Engel
 #+SETUPFILE: $SetupPath$")
   (backward-char))
@@ -166,28 +178,24 @@
 (global-set-key (kbd "M-# M-1") #'my/latex-org-export)
 (global-set-key (kbd "M-# M-2") #'my/source-block)
 
-;;(require 'ox-reveal)
-;;(setq org-reveal-root "file:///D:/Programme/reveal.js")
-(require 'org-re-reveal)
-(setq org-re-reveal-root "file:///D:/Programme/reveal.js")
+(use-package org-re-reveal
+  :ensure t
+  :init
+  (setq org-re-reveal-root local-reveal-js-path) )
 
-;; Abbreviations
-(setq-default abbrev-mode t)
-(define-abbrev global-abbrev-table "$SetupPath$" "D:/Programme/.config/emacs/setup.org")
-;; (define-abbrev global-abbrev-table "$ox-re-reveal$" "file:///D:/Programme/reveal.js")
-(define-abbrev global-abbrev-table "$lang-tool$" "C:/Programms/LanguageTool-6.3/languagetool-commandline.jar")
+
 
 (custom-set-variables
  ;; custom-set-variables was added by Custom.
  ;; If you edit it by hand, you could mess it up, so be careful.
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
- '(custom-enabled-themes '(kaolin-shiva))
+ '(custom-enabled-themes '(kanagawa))
  '(custom-safe-themes
-   '("249e100de137f516d56bcf2e98c1e3f9e1e8a6dce50726c974fa6838fbfcec6b" "b95f61aa5f8a54d494a219fcde9049e23e3396459a224631e1719effcb981dbd" "a131602c676b904a5509fff82649a639061bf948a5205327e0f5d1559e04f5ed" "c95813797eb70f520f9245b349ff087600e2bd211a681c7a5602d039c91a6428" "2ce76d65a813fae8cfee5c207f46f2a256bac69dacbb096051a7a8651aa252b0" "9cd57dd6d61cdf4f6aef3102c4cc2cfc04f5884d4f40b2c90a866c9b6267f2b3" "74e2ed63173b47d6dc9a82a9a8a6a9048d89760df18bc7033c5f91ff4d083e37" "788121c96b7a9b99a6f35e53b7c154991f4880bb0046a80330bb904c1a85e275" "6128465c3d56c2630732d98a3d1c2438c76a2f296f3c795ebda534d62bb8a0e3" "b5fab52f16546a15f171e6bd450ff11f2a9e20e5ac7ec10fa38a14bb0c67b9ab" "be84a2e5c70f991051d4aaf0f049fa11c172e5d784727e0b525565bb1533ec78" "e266d44fa3b75406394b979a3addc9b7f202348099cfde69e74ee6432f781336" "3c7a784b90f7abebb213869a21e84da462c26a1fda7e5bd0ffebf6ba12dbd041" "00cec71d41047ebabeb310a325c365d5bc4b7fab0a681a2a108d32fb161b4006" "0170347031e5dfa93813765bc4ef9269a5e357c0be01febfa3ae5e5fcb351f09" "3de5c795291a145452aeb961b1151e63ef1cb9565e3cdbd10521582b5fd02e9a" default))
+   '("380763a0ed87b880b905c604bf0c2925b767b43ffe42fb70048f33ffd2349ceb" "e70e87ad139f94d3ec5fdf782c978450fc2cb714d696e520b176ff797b97b8d2" "be84a2e5c70f991051d4aaf0f049fa11c172e5d784727e0b525565bb1533ec78" "e266d44fa3b75406394b979a3addc9b7f202348099cfde69e74ee6432f781336" "3c7a784b90f7abebb213869a21e84da462c26a1fda7e5bd0ffebf6ba12dbd041" "00cec71d41047ebabeb310a325c365d5bc4b7fab0a681a2a108d32fb161b4006" "0170347031e5dfa93813765bc4ef9269a5e357c0be01febfa3ae5e5fcb351f09" "3de5c795291a145452aeb961b1151e63ef1cb9565e3cdbd10521582b5fd02e9a" default))
  '(org-agenda-files '("d:/Uni/CTS/CTS5/CG/CG.org"))
  '(package-selected-packages
-   '(org-re-reveal use-package ox-reveal langtool auctex company cmake-mode kaolin-themes command-log-mode))
+   '(org-re-reveal kanagawa-theme langtool-popup langtool auctex company cmake-mode kaolin-themes doom-themes command-log-mode))
  '(warning-suppress-types '((comp))))
 (custom-set-faces
  ;; custom-set-faces was added by Custom.
@@ -195,3 +203,4 @@
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
  )
+ 
