@@ -122,6 +122,13 @@
 (setq org-latex-title-command "\\maketitle \\newpage")
 (setq org-latex-toc-command "\\tableofcontents \\newpage")
 
+;; Org-mode Ditaa
+(org-babel-do-load-languages
+ 'org-babel-load-languages
+ '((ditaa . t))) ; this line activates ditaa
+(setq org-ditaa-jar-path local-ditaa-path)
+(setq org-ditaa-eps-jar-path local-ditaa-eps-path)
+
 ;; Magit
 ;;(require 'package)
 ;;(add-to-list 'package-archives
@@ -141,28 +148,34 @@
 (global-set-key (kbd "C-c r") #'recentf-open-files)
 ;;(initial-buffer-choice 'recentf-open-files)
 
-;;pdf-tools
-;; (use-package pdf-tools
-;;   :load-path "site-lisp/pdf-tools/lisp"
-;;   :magic ("%PDF" . pdf-view-mode)
-;;   :config
-;;   (pdf-tools-install :no-query))
-
 ;; Insert Text Snippet for Org-mode Latex Export
 (defun my/latex-org-export ()
   (interactive)
   (insert "#+TITLE:
 #+SUBTITLE: Winter Semester 2023/24
 #+AUTHOR: Simon Engel
-#+SETUPFILE: D:/Programme/.config/emacs/setup.org")
+#+SETUPFILE: $SetupPath$")
   (backward-char))
 
-(global-set-key (kbd "M-#") #'my/latex-org-export)
+(defun my/source-block ()
+  (interactive)
+  (insert " #+begin_src c++
+
+#+end_src") (backward-char))
+
+(global-set-key (kbd "M-# M-1") #'my/latex-org-export)
+(global-set-key (kbd "M-# M-2") #'my/source-block)
 
 ;;(require 'ox-reveal)
 ;;(setq org-reveal-root "file:///D:/Programme/reveal.js")
 (require 'org-re-reveal)
 (setq org-re-reveal-root "file:///D:/Programme/reveal.js")
+
+;; Abbreviations
+(setq-default abbrev-mode t)
+(define-abbrev global-abbrev-table "$SetupPath$" "D:/Programme/.config/emacs/setup.org")
+;; (define-abbrev global-abbrev-table "$ox-re-reveal$" "file:///D:/Programme/reveal.js")
+(define-abbrev global-abbrev-table "$lang-tool$" "C:/Programms/LanguageTool-6.3/languagetool-commandline.jar")
 
 (custom-set-variables
  ;; custom-set-variables was added by Custom.
