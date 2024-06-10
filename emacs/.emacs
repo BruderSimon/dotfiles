@@ -177,7 +177,8 @@
 
 (defun my/revealjs-export ()
   (interactive)
-  (insert "#+REVEAL_TRANS: None
+  (insert "#+OPTIONS: num:nil  timestamp:nil toc:nil
+#+REVEAL_TRANS: None
 #+REVEAL_THEME: dracula
 # #+REVEAL_MARGIN: 0.3
 #+REVEAL_MIN_SCALE: -0.5
