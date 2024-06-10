@@ -175,8 +175,20 @@
 
 #+end_src") (backward-char))
 
+(defun my/revealjs-export ()
+  (interactive)
+  (insert "#+REVEAL_TRANS: None
+#+REVEAL_THEME: dracula
+# #+REVEAL_MARGIN: 0.3
+#+REVEAL_MIN_SCALE: -0.5
+# #+REVEAL_EXTRA_CSS: ./presentation.css
+#+Title: 
+#+Author: Simon Engel")
+  (backward-char))
+
 (global-set-key (kbd "M-# M-1") #'my/latex-org-export)
 (global-set-key (kbd "M-# M-2") #'my/source-block)
+(global-set-key (kbd "M-# M-3") #'my/revealjs-export)
 
 (use-package org-re-reveal
   :ensure t
@@ -192,7 +204,7 @@
  ;; If there is more than one, they won't work right.
  '(custom-enabled-themes '(kanagawa))
  '(custom-safe-themes
-   '("380763a0ed87b880b905c604bf0c2925b767b43ffe42fb70048f33ffd2349ceb" "e70e87ad139f94d3ec5fdf782c978450fc2cb714d696e520b176ff797b97b8d2" "be84a2e5c70f991051d4aaf0f049fa11c172e5d784727e0b525565bb1533ec78" "e266d44fa3b75406394b979a3addc9b7f202348099cfde69e74ee6432f781336" "3c7a784b90f7abebb213869a21e84da462c26a1fda7e5bd0ffebf6ba12dbd041" "00cec71d41047ebabeb310a325c365d5bc4b7fab0a681a2a108d32fb161b4006" "0170347031e5dfa93813765bc4ef9269a5e357c0be01febfa3ae5e5fcb351f09" "3de5c795291a145452aeb961b1151e63ef1cb9565e3cdbd10521582b5fd02e9a" default))
+   '("380763a0ed87b880b905c604bf0c2925b767b43ffe42fb70048f33ffd2349ceb" default))
  '(org-agenda-files '("d:/Uni/CTS/CTS5/CG/CG.org"))
  '(package-selected-packages
    '(org-re-reveal kanagawa-theme langtool-popup langtool auctex company cmake-mode kaolin-themes doom-themes command-log-mode))
