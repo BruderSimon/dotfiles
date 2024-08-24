@@ -1,5 +1,4 @@
-;; (setq inhibit-startup-message t) ;remove starting screen
-
+;;(setq inhibit-startup-message t) ;remove starting screen
 
 (scroll-bar-mode -1)        ; Disable visible scrollbar
 (tool-bar-mode -1)          ; Disable the toolbar
@@ -11,8 +10,8 @@
 ;; Path Variables for better maintainance
 (setq local-ditaa-path "C:\\Programms\\ditaa\\ditaa0_9.jar")
 (setq local-ditaa-eps-path  "C:\\Programms\\ditaa\\DitaaEps.jar")
-(setq local-langtool-path "C:/Programms/LanguageTool-6.3/languagetool-commandline.jar")
-(setq local-reveal-js-path "file:///C:/Programms/reveal.js")
+(setq local-langtool-path "D:/Programme/LanguageTool-6.3/languagetool-commandline.jar")
+(setq local-reveal-js-path "file:///D:/Programme/reveal.js")
 
 ;; Abbreviations
 (setq-default abbrev-mode t)
@@ -30,7 +29,7 @@
 
 ;; Initialize use-package on non-Linux platforms
 (unless (package-installed-p 'use-package)
-   (package-install 'use-package))
+  (package-install 'use-package))
 
 (require 'use-package)
 (setq use-package-always-ensure t)
@@ -80,7 +79,8 @@
 ;;CMake mode
 (setq load-path (cons (expand-file-name "/dir/with/cmake-mode") load-path))
 (use-package cmake-mode)
-
+;; Dart-mode
+(use-package dart-mode)
 
 ;;eglot
 (use-package eglot
@@ -89,13 +89,38 @@
 (add-hook 'c-mode-hook 'eglot-ensure)
 (add-hook 'c++-mode-hook 'eglot-ensure)
 
+ ;;dart-mode
+(use-package dart-mode
+  :ensure t)
+;;flutter
+(use-package flutter
+  :ensure t
+  :after dart-mode)
+;;dart eglot cpnfig
+(add-to-list 'eglot-server-programs '(dart-mode . ("dart" "language-server")))
+(add-hook 'dart-mode-hook 'eglot-ensure)
+
 ;; Other Hooks for Programming
 (use-package company
   :ensure t
   :hook
   (c-mode . company-mode)
   (c++-mode . company-mode)
-  (cmake-mode . company-mode))
+  (cmake-mode . company-mode)
+  (dart-mode . company-mode))
+
+
+;; Flymake-languagetool API access
+(use-package flymake-languagetool
+  :ensure t
+  :hook ((text-mode       . flymake-languagetool-load)
+         (latex-mode      . flymake-languagetool-load)
+         (org-mode        . flymake-languagetool-load)
+         (markdown-mode   . flymake-languagetool-load))
+  :init
+  ;; LanguageTools API Remote Server Configuration
+  (setq flymake-languagetool-server-jar nil)
+  (setq flymake-languagetool-url "https://api.languagetool.org"))
 
 ;;Language Tool
 (use-package langtool
@@ -133,13 +158,6 @@
 (setq org-latex-listings 't)
 (setq org-latex-title-command "\\maketitle \\newpage")
 (setq org-latex-toc-command "\\tableofcontents \\newpage")
-
-;; Org-mode Ditaa
-(org-babel-do-load-languages
- 'org-babel-load-languages
- '((ditaa . t))) ; this line activates ditaa
-(setq org-ditaa-jar-path local-ditaa-path)
-(setq org-ditaa-eps-jar-path local-ditaa-eps-path)
 
 ;; Magit
 ;;(require 'package)
@@ -183,8 +201,6 @@
   :init
   (setq org-re-reveal-root local-reveal-js-path) )
 
-
-
 (custom-set-variables
  ;; custom-set-variables was added by Custom.
  ;; If you edit it by hand, you could mess it up, so be careful.
@@ -192,10 +208,11 @@
  ;; If there is more than one, they won't work right.
  '(custom-enabled-themes '(kanagawa))
  '(custom-safe-themes
-   '("380763a0ed87b880b905c604bf0c2925b767b43ffe42fb70048f33ffd2349ceb" "e70e87ad139f94d3ec5fdf782c978450fc2cb714d696e520b176ff797b97b8d2" "be84a2e5c70f991051d4aaf0f049fa11c172e5d784727e0b525565bb1533ec78" "e266d44fa3b75406394b979a3addc9b7f202348099cfde69e74ee6432f781336" "3c7a784b90f7abebb213869a21e84da462c26a1fda7e5bd0ffebf6ba12dbd041" "00cec71d41047ebabeb310a325c365d5bc4b7fab0a681a2a108d32fb161b4006" "0170347031e5dfa93813765bc4ef9269a5e357c0be01febfa3ae5e5fcb351f09" "3de5c795291a145452aeb961b1151e63ef1cb9565e3cdbd10521582b5fd02e9a" default))
+   '("9e296dbc86374778cca0f22cfd7cd44d35e7c2e678085417be97251ce7c75dcc" "380763a0ed87b880b905c604bf0c2925b767b43ffe42fb70048f33ffd2349ceb" "3de5c795291a145452aeb961b1151e63ef1cb9565e3cdbd10521582b5fd02e9a" default))
  '(org-agenda-files '("d:/Uni/CTS/CTS5/CG/CG.org"))
  '(package-selected-packages
-   '(org-re-reveal kanagawa-theme langtool-popup langtool auctex company cmake-mode kaolin-themes doom-themes command-log-mode))
+   '(flutter dart-mode ty flymake-languagetool magit kanagawa-theme org-re-reveal use-package ox-reveal langtool auctex company cmake-mode kaolin-themes command-log-mode))
+ '(warning-suppress-log-types '((comp)))
  '(warning-suppress-types '((comp))))
 (custom-set-faces
  ;; custom-set-faces was added by Custom.
@@ -203,4 +220,3 @@
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
  )
- 
