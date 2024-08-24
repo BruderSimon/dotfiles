@@ -193,8 +193,21 @@
 
 #+end_src") (backward-char))
 
+(defun my/revealjs-export ()
+  (interactive)
+  (insert "#+OPTIONS: num:nil  timestamp:nil toc:nil
+#+REVEAL_TRANS: None
+#+REVEAL_THEME: dracula
+# #+REVEAL_MARGIN: 0.3
+#+REVEAL_MIN_SCALE: -0.5
+# #+REVEAL_EXTRA_CSS: ./presentation.css
+#+Title: 
+#+Author: Simon Engel")
+  (backward-char))
+
 (global-set-key (kbd "M-# M-1") #'my/latex-org-export)
 (global-set-key (kbd "M-# M-2") #'my/source-block)
+(global-set-key (kbd "M-# M-3") #'my/revealjs-export)
 
 (use-package org-re-reveal
   :ensure t
@@ -208,7 +221,7 @@
  ;; If there is more than one, they won't work right.
  '(custom-enabled-themes '(kanagawa))
  '(custom-safe-themes
-   '("9e296dbc86374778cca0f22cfd7cd44d35e7c2e678085417be97251ce7c75dcc" "380763a0ed87b880b905c604bf0c2925b767b43ffe42fb70048f33ffd2349ceb" "3de5c795291a145452aeb961b1151e63ef1cb9565e3cdbd10521582b5fd02e9a" default))
+   '("380763a0ed87b880b905c604bf0c2925b767b43ffe42fb70048f33ffd2349ceb" default))
  '(org-agenda-files '("d:/Uni/CTS/CTS5/CG/CG.org"))
  '(package-selected-packages
    '(flutter dart-mode ty flymake-languagetool magit kanagawa-theme org-re-reveal use-package ox-reveal langtool auctex company cmake-mode kaolin-themes command-log-mode))
