@@ -12,6 +12,7 @@
 (setq local-ditaa-eps-path  "C:\\Programms\\ditaa\\DitaaEps.jar")
 (setq local-langtool-path "D:/Programme/LanguageTool-6.3/languagetool-commandline.jar")
 (setq local-reveal-js-path "file:///D:/Programme/reveal.js")
+(setq local-org-roam-db-path "D:/Dokumente/Org-Roam")
 
 ;; Abbreviations
 (setq-default abbrev-mode t)
@@ -34,6 +35,7 @@
 (require 'use-package)
 (setq use-package-always-ensure t)
 (set-default-coding-systems 'utf-8) ; Default coding system
+(prefer-coding-system 'utf-8)
 
 ;;Improve Scroling
 (setq mouse-wheel-scroll-amount '(1 ((shift) . 1))) ;; one line at a time
@@ -75,7 +77,6 @@
 
 (add-hook 'emacs-startup-hook #'efs/display-startup-time)
 
-
 ;;CMake mode
 (setq load-path (cons (expand-file-name "/dir/with/cmake-mode") load-path))
 (use-package cmake-mode)
@@ -113,6 +114,7 @@
   (c++-mode . company-mode)
   (cmake-mode . company-mode)
   (dart-mode . company-mode))
+
 
 ;; Flymake-languagetool API access
 (use-package flymake-languagetool
@@ -162,6 +164,46 @@
 (setq org-latex-listings 't)
 (setq org-latex-title-command "\\maketitle \\newpage")
 (setq org-latex-toc-command "\\tableofcontents \\newpage")
+
+;; Org-mode Color Highlights
+(setq org-emphasis-alist
+  '(("*" (bold :foreground "red" ))
+    ("/" italic)
+    ("_" underline)
+    ("=" (:background "maroon" :foreground "white"))
+    ("~" (:background "deep sky blue" :foreground "MidnightBlue"))
+    ("+" (:strike-through t))))
+
+ ;; Org-roam
+(use-package org-roam
+  :ensure t
+  :init
+  (setq org-roam-v2-ack t)
+  :custom
+  (org-roam-completion-everywhere t)
+  (org-roam-directory local-org-roam-db-path)
+  (org-roam-capture-templates
+   '(("d" "default" plain
+      "%?"
+      :target (file+head "%<%Y%m%d%H%M%S>-${slug}.org" "#+title: ${title}\n")
+      :unnarrowed t)
+     ("v" "vocabulary" plain "\n* Translation \n\n** English \n\n** German
+\n\n* Location(Loci)\n\n* Additional Comments"
+      :target (file+head "%<vocab>-${slug}.org" "#+title: ${title}\n")
+      :unnarrowed t)
+     ("g" "grammar" plain "\n* Explanation \n\n* Usage \n\n* Loci \n\n* Additional Comments"
+      :target (file+head "%<grammar>-${slug}.org" "#+title: ${title}\n")
+      :unnarrowed t)
+     ))
+  :bind (("C-c n l" . org-roam-buffer-toggle)
+         ("C-c n f" . org-roam-node-find)
+         ("C-c n i" . org-roam-node-insert))
+  :config
+  (org-roam-setup))
+
+;; Org-roam-ui
+(use-package org-roam-ui
+  :ensure t)
 
 ;; Magit
 ;;(require 'package)
@@ -215,9 +257,12 @@
    '("9e296dbc86374778cca0f22cfd7cd44d35e7c2e678085417be97251ce7c75dcc" "380763a0ed87b880b905c604bf0c2925b767b43ffe42fb70048f33ffd2349ceb" "3de5c795291a145452aeb961b1151e63ef1cb9565e3cdbd10521582b5fd02e9a" default))
  '(org-agenda-files '("d:/Uni/CTS/CTS5/CG/CG.org"))
  '(package-selected-packages
-   '(yaml-mode flutter dart-mode ty flymake-languagetool magit kanagawa-theme org-re-reveal use-package ox-reveal langtool auctex company cmake-mode kaolin-themes command-log-mode))
+   '(org-roam-ui org-roam yaml-mode flutter dart-mode ty flymake-languagetool magit kanagawa-theme org-re-reveal use-package ox-reveal langtool auctex company cmake-mode kaolin-themes command-log-mode))
+ '(safe-local-variable-values
+   '((org-roam-db-location . "D:/Dokumente/MemoryPalace/org-roam.db")
+     (org-roam-directory . "D:/Dokumente/MemoryPalace")))
  '(warning-suppress-log-types '((comp)))
- '(warning-suppress-types '((comp))))
+ '(warning-suppress-types '((use-package) (comp))))
 (custom-set-faces
  ;; custom-set-faces was added by Custom.
  ;; If you edit it by hand, you could mess it up, so be careful.
