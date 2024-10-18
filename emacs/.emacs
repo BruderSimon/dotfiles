@@ -1,4 +1,5 @@
-;;(setq inhibit-startup-message t) ;remove starting screen
+;; (setq inhibit-startup-message t) ;remove starting screen
+
 
 (scroll-bar-mode -1)        ; Disable visible scrollbar
 (tool-bar-mode -1)          ; Disable the toolbar
@@ -10,9 +11,9 @@
 ;; Path Variables for better maintainance
 (setq local-ditaa-path "C:\\Programms\\ditaa\\ditaa0_9.jar")
 (setq local-ditaa-eps-path  "C:\\Programms\\ditaa\\DitaaEps.jar")
-(setq local-langtool-path "D:/Programme/LanguageTool-6.3/languagetool-commandline.jar")
-(setq local-reveal-js-path "file:///D:/Programme/reveal.js")
-(setq local-org-roam-db-path "D:/Dokumente/Org-Roam")
+(setq local-langtool-path "C:/Programms/LanguageTool-6.3/languagetool-commandline.jar")
+(setq local-reveal-js-path "file:///C:/Programms/reveal.js")
+(setq local-org-roam-db-path "G:/Dokumente/MemoryPalace/")
 
 ;; Abbreviations
 (setq-default abbrev-mode t)
@@ -30,12 +31,11 @@
 
 ;; Initialize use-package on non-Linux platforms
 (unless (package-installed-p 'use-package)
-  (package-install 'use-package))
+   (package-install 'use-package))
 
 (require 'use-package)
 (setq use-package-always-ensure t)
 (set-default-coding-systems 'utf-8) ; Default coding system
-(prefer-coding-system 'utf-8)
 
 ;;Improve Scroling
 (setq mouse-wheel-scroll-amount '(1 ((shift) . 1))) ;; one line at a time
@@ -88,8 +88,10 @@
 (use-package eglot
   :ensure t)
 (add-to-list 'eglot-server-programs '((c++-mode c-mode) "clangd"))
+(add-to-list 'eglot-server-programs '(csharp-mode . ("OmniSharp.exe" "-lsp")))
 (add-hook 'c-mode-hook 'eglot-ensure)
 (add-hook 'c++-mode-hook 'eglot-ensure)
+(add-hook 'csharp-mode-hook 'eglot-ensure)
 
  ;;dart-mode
 (use-package dart-mode
@@ -106,12 +108,17 @@
 (use-package yaml-mode
   :ensure t)
 
+;; Markdown-mode
+(use-package markdown-mode
+  :ensure t)
+
 ;; Other Hooks for Programming
 (use-package company
   :ensure t
   :hook
   (c-mode . company-mode)
   (c++-mode . company-mode)
+  (csharp-mode . company-mode)
   (cmake-mode . company-mode)
   (dart-mode . company-mode))
 
@@ -206,9 +213,9 @@
   :ensure t)
 
 ;; Magit
-;;(require 'package)
-;;(add-to-list 'package-archives
-;;             '("melpa" . "https://melpa.org/packages/") t)
+;; (use-package magit
+;;   :ensure t)
+
 
 ;; Custom Keysets
 (global-set-key (kbd "C-c a") #'org-agenda)
@@ -237,15 +244,40 @@
   (interactive)
   (insert " #+begin_src c++
 
-#+end_src") (backward-char))
+#+end_src")
+  (backward-char))
+
+(defun my/revealjs-export ()
+  (interactive)
+  (insert "#+OPTIONS: num:nil  timestamp:nil toc:nil
+#+REVEAL_TRANS: None
+#+REVEAL_THEME: dracula
+# #+REVEAL_MARGIN: 0.3
+#+REVEAL_MIN_SCALE: -0.5
+# #+REVEAL_EXTRA_CSS: ./presentation.css
+#+Title: 
+#+Author: Simon Engel")
+  (backward-char))
+
+(defun my/revealjs-htmlblock ()
+  (interactive)
+  (insert " #+BEGIN_EXPORT html
+<div>
+</div>
+#+END_EXPORT ")
+  (backward-char))
 
 (global-set-key (kbd "M-# M-1") #'my/latex-org-export)
 (global-set-key (kbd "M-# M-2") #'my/source-block)
+(global-set-key (kbd "M-# M-3") #'my/revealjs-export)
+(global-set-key (kbd "M-# M-4") #'my/revealjs-htmlblock)
 
 (use-package org-re-reveal
   :ensure t
   :init
   (setq org-re-reveal-root local-reveal-js-path) )
+
+
 
 (custom-set-variables
  ;; custom-set-variables was added by Custom.
@@ -254,18 +286,22 @@
  ;; If there is more than one, they won't work right.
  '(custom-enabled-themes '(kanagawa))
  '(custom-safe-themes
-   '("9e296dbc86374778cca0f22cfd7cd44d35e7c2e678085417be97251ce7c75dcc" "380763a0ed87b880b905c604bf0c2925b767b43ffe42fb70048f33ffd2349ceb" "3de5c795291a145452aeb961b1151e63ef1cb9565e3cdbd10521582b5fd02e9a" default))
+   '("7e0dec7d9f3821acba56ab19083ed059a94753ed79ee89b0d8167b727ed6cb81" "380763a0ed87b880b905c604bf0c2925b767b43ffe42fb70048f33ffd2349ceb" "e70e87ad139f94d3ec5fdf782c978450fc2cb714d696e520b176ff797b97b8d2" "be84a2e5c70f991051d4aaf0f049fa11c172e5d784727e0b525565bb1533ec78" "e266d44fa3b75406394b979a3addc9b7f202348099cfde69e74ee6432f781336" "3c7a784b90f7abebb213869a21e84da462c26a1fda7e5bd0ffebf6ba12dbd041" "00cec71d41047ebabeb310a325c365d5bc4b7fab0a681a2a108d32fb161b4006" "0170347031e5dfa93813765bc4ef9269a5e357c0be01febfa3ae5e5fcb351f09" "3de5c795291a145452aeb961b1151e63ef1cb9565e3cdbd10521582b5fd02e9a" default))
  '(org-agenda-files '("d:/Uni/CTS/CTS5/CG/CG.org"))
  '(package-selected-packages
-   '(org-roam-ui org-roam yaml-mode flutter dart-mode ty flymake-languagetool magit kanagawa-theme org-re-reveal use-package ox-reveal langtool auctex company cmake-mode kaolin-themes command-log-mode))
+   '(markdown-mode org-roam-ui org-roam flymake-languagetool yaml-mode flutter dart-mode org-re-reveal kanagawa-theme langtool auctex company cmake-mode kaolin-themes doom-themes command-log-mode))
  '(safe-local-variable-values
-   '((org-roam-db-location . "D:/Dokumente/MemoryPalace/org-roam.db")
-     (org-roam-directory . "D:/Dokumente/MemoryPalace")))
+   '((org-roam-directory . "G:/Dokumente/MemoryPalace/")
+     (org-roam-db-location . "./org-roam.db")
+     (org-roam-directory . ".")
+     (org-roam-db-location . "G:/Dokumente/MemoryPalace/org-roam.db")
+     (org-roam-directory . "G:/Dokumente/MemoryPalace")))
  '(warning-suppress-log-types '((comp)))
- '(warning-suppress-types '((use-package) (comp))))
+ '(warning-suppress-types '((use-package) (use-package) (comp))))
 (custom-set-faces
  ;; custom-set-faces was added by Custom.
  ;; If you edit it by hand, you could mess it up, so be careful.
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
  )
+ 
