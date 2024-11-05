@@ -44,8 +44,8 @@
 (setq scroll-step 1) ;; keyboard scroll one line at a time
 
 ;;Set frame transparency and maximize windows by default.
-(set-frame-parameter (selected-frame) 'alpha '(99 . 99))
-(add-to-list 'default-frame-alist '(alpha . (99 . 99)))
+(set-frame-parameter (selected-frame) 'alpha '(95 . 95))
+(add-to-list 'default-frame-alist '(alpha . (95 . 95)))
 (set-frame-parameter (selected-frame) 'fullscreen 'maximized)
 (add-to-list 'default-frame-alist '(fullscreen . maximized))
 
@@ -76,6 +76,11 @@
            gcs-done))
 
 (add-hook 'emacs-startup-hook #'efs/display-startup-time)
+
+ ;; Hideshow to collapse code blocks
+(add-hook 'prog-mode-hook #'hs-minor-mode)
+(global-set-key (kbd "C-c <right>") 'hs-show-block)
+(global-set-key (kbd "C-c <left>") 'hs-hide-block)
 
 ;;CMake mode
 (setq load-path (cons (expand-file-name "/dir/with/cmake-mode") load-path))
@@ -112,6 +117,10 @@
 (use-package markdown-mode
   :ensure t)
 
+(use-package move-text
+  :ensure t)
+(move-text-default-bindings)
+
 ;; Other Hooks for Programming
 (use-package company
   :ensure t
@@ -122,12 +131,11 @@
   (cmake-mode . company-mode)
   (dart-mode . company-mode))
 
-
 ;; Flymake-languagetool API access
 (use-package flymake-languagetool
   :ensure t
   :hook ((text-mode       . flymake-languagetool-load)
-         (latex-mode      . flymake-languagetool-load)
+         (LaTeX-mode      . flymake-languagetool-load)
          (org-mode        . flymake-languagetool-load)
          (markdown-mode   . flymake-languagetool-load))
   :init
@@ -289,7 +297,7 @@
    '("7e0dec7d9f3821acba56ab19083ed059a94753ed79ee89b0d8167b727ed6cb81" "380763a0ed87b880b905c604bf0c2925b767b43ffe42fb70048f33ffd2349ceb" "e70e87ad139f94d3ec5fdf782c978450fc2cb714d696e520b176ff797b97b8d2" "be84a2e5c70f991051d4aaf0f049fa11c172e5d784727e0b525565bb1533ec78" "e266d44fa3b75406394b979a3addc9b7f202348099cfde69e74ee6432f781336" "3c7a784b90f7abebb213869a21e84da462c26a1fda7e5bd0ffebf6ba12dbd041" "00cec71d41047ebabeb310a325c365d5bc4b7fab0a681a2a108d32fb161b4006" "0170347031e5dfa93813765bc4ef9269a5e357c0be01febfa3ae5e5fcb351f09" "3de5c795291a145452aeb961b1151e63ef1cb9565e3cdbd10521582b5fd02e9a" default))
  '(org-agenda-files '("d:/Uni/CTS/CTS5/CG/CG.org"))
  '(package-selected-packages
-   '(markdown-mode org-roam-ui org-roam flymake-languagetool yaml-mode flutter dart-mode org-re-reveal kanagawa-theme langtool auctex company cmake-mode kaolin-themes doom-themes command-log-mode))
+   '(move-text markdown-mode org-roam-ui org-roam flymake-languagetool yaml-mode flutter dart-mode org-re-reveal kanagawa-theme langtool auctex company cmake-mode kaolin-themes doom-themes command-log-mode))
  '(safe-local-variable-values
    '((org-roam-directory . "G:/Dokumente/MemoryPalace/")
      (org-roam-db-location . "./org-roam.db")
