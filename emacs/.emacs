@@ -105,7 +105,7 @@
 (use-package flutter
   :ensure t
   :after dart-mode)
-;;dart eglot cpnfig
+;;dart eglot config
 (add-to-list 'eglot-server-programs '(dart-mode . ("dart" "language-server")))
 (add-hook 'dart-mode-hook 'eglot-ensure)
 
@@ -284,8 +284,6 @@
   :ensure t
   :init
   (setq org-re-reveal-root local-reveal-js-path) )
-
-
 
 (custom-set-variables
  ;; custom-set-variables was added by Custom.
