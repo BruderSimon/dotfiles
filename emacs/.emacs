@@ -92,9 +92,13 @@
   (c-mode      . eglot-ensure)
   (c++-mode    . eglot-ensure)
   (csharp-mode . eglot-ensure)
+  ;;(dart-mode . eglot-ensure)
   :custom
   (add-to-list 'eglot-server-programs '((c++-mode c-mode) "clangd"))
-  (add-to-list 'eglot-server-programs '(csharp-mode . ("OmniSharp.exe" "-lsp"))))
+  (add-to-list 'eglot-server-programs '(csharp-mode . ("OmniSharp.exe" "-lsp")))
+  ;;dart eglot config
+  ;;(add-to-list 'eglot-server-programs '(dart-mode . ("dart" "language-server")))
+  )
 
 ;;dart-mode
 ;; (use-package dart-mode
@@ -103,9 +107,6 @@
 ;; (use-package flutter
 ;;   :ensure t
 ;;   :after dart-mode)
-;; ;;dart eglot cpnfig
-;; (add-to-list 'eglot-server-programs '(dart-mode . ("dart" "language-server")))
-;; (add-hook 'dart-mode-hook 'eglot-ensure)
 
 ;;Yaml-mode
 (use-package yaml-mode
