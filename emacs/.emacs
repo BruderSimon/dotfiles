@@ -1,11 +1,9 @@
 ;; (setq inhibit-startup-message t) ;remove starting screen
 
-
 (scroll-bar-mode -1)        ; Disable visible scrollbar
 (tool-bar-mode -1)          ; Disable the toolbar
 (tooltip-mode -1)           ; Disable tooltips
 (set-fringe-mode 10)        ; Give some breathing room
-
 (menu-bar-mode -1)            ; Disable the menu bar
 
 ;; Path Variables for better maintainance
@@ -84,30 +82,30 @@
 
 ;;CMake mode
 (setq load-path (cons (expand-file-name "/dir/with/cmake-mode") load-path))
-(use-package cmake-mode)
-;; Dart-mode
-(use-package dart-mode
-  :hook (dart-mode . flutter-test-mode))
+(use-package cmake-mode
+  :ensure t)
 
 ;;eglot
 (use-package eglot
-  :ensure t)
-(add-to-list 'eglot-server-programs '((c++-mode c-mode) "clangd"))
-(add-to-list 'eglot-server-programs '(csharp-mode . ("OmniSharp.exe" "-lsp")))
-(add-hook 'c-mode-hook 'eglot-ensure)
-(add-hook 'c++-mode-hook 'eglot-ensure)
-(add-hook 'csharp-mode-hook 'eglot-ensure)
-
- ;;dart-mode
-(use-package dart-mode
-  :ensure t)
-;;flutter
-(use-package flutter
   :ensure t
-  :after dart-mode)
-;;dart eglot cpnfig
-(add-to-list 'eglot-server-programs '(dart-mode . ("dart" "language-server")))
-(add-hook 'dart-mode-hook 'eglot-ensure)
+  :hook
+  (c-mode      . eglot-ensure)
+  (c++-mode    . eglot-ensure)
+  (csharp-mode . eglot-ensure)
+  :custom
+  (add-to-list 'eglot-server-programs '((c++-mode c-mode) "clangd"))
+  (add-to-list 'eglot-server-programs '(csharp-mode . ("OmniSharp.exe" "-lsp"))))
+
+;;dart-mode
+;; (use-package dart-mode
+;;   :ensure t)
+;; ;;flutter
+;; (use-package flutter
+;;   :ensure t
+;;   :after dart-mode)
+;; ;;dart eglot cpnfig
+;; (add-to-list 'eglot-server-programs '(dart-mode . ("dart" "language-server")))
+;; (add-hook 'dart-mode-hook 'eglot-ensure)
 
 ;;Yaml-mode
 (use-package yaml-mode
@@ -138,25 +136,26 @@
          (LaTeX-mode      . flymake-languagetool-load)
          (org-mode        . flymake-languagetool-load)
          (markdown-mode   . flymake-languagetool-load))
-  :init
+  :custom
   ;; LanguageTools API Remote Server Configuration
-  (setq flymake-languagetool-server-jar nil)
-  (setq flymake-languagetool-url "https://api.languagetool.org"))
+  (flymake-languagetool-server-jar nil)
+  (flymake-languagetool-url "https://api.languagetool.org"))
 
 ;;Language Tool
 (use-package langtool
   :ensure t
-  :init
-  (setq langtool-language-tool-jar local-langtool-path)
-  (setq langtool-default-language "en-GB"))
+  :cutom
+  (langtool-language-tool-jar local-langtool-path)
+  (langtool-default-language "en-GB"))
+
 
 ;; Auctex
 (use-package auctex
   :ensure t
-  :config
-  (setq TeX-PDF-mode t)
-  (setq TeX-parse-self t) ; Enable parse on load.
-  (setq TeX-auto-save t) ; Enable parse on save.
+  :custom
+  (TeX-PDF-mode t)
+  (TeX-parse-self t) ; Enable parse on load.
+  (TeX-auto-save t) ; Enable parse on save.
   :hook
   (LaTeX-mode . turn-on-prettify-symbols-mode)
   (LaTeX-mode . LaTeX-math-mode)
@@ -180,6 +179,7 @@
 (setq org-latex-title-command "\\maketitle \\newpage")
 (setq org-latex-toc-command "\\tableofcontents \\newpage")
 
+
 ;; Org-mode Color Highlights
 (setq org-emphasis-alist
   '(("*" (bold :foreground "red" ))
@@ -189,12 +189,13 @@
     ("~" (:background "deep sky blue" :foreground "MidnightBlue"))
     ("+" (:strike-through t))))
 
+(global-set-key (kbd "C-c a") #'org-agenda)
+
  ;; Org-roam
 (use-package org-roam
   :ensure t
-  :init
-  (setq org-roam-v2-ack t)
   :custom
+  (org-roam-v2-ack t)
   (org-roam-completion-everywhere t)
   (org-roam-directory local-org-roam-db-path)
   (org-roam-capture-templates
@@ -223,10 +224,6 @@
 ;; Magit
 ;; (use-package magit
 ;;   :ensure t)
-
-
-;; Custom Keysets
-(global-set-key (kbd "C-c a") #'org-agenda)
 
 ;; Recent files
 (use-package recentf
@@ -282,10 +279,8 @@
 
 (use-package org-re-reveal
   :ensure t
-  :init
-  (setq org-re-reveal-root local-reveal-js-path) )
-
-
+  :custom
+  (org-re-reveal-root local-reveal-js-path))
 
 (custom-set-variables
  ;; custom-set-variables was added by Custom.
@@ -294,10 +289,10 @@
  ;; If there is more than one, they won't work right.
  '(custom-enabled-themes '(kanagawa))
  '(custom-safe-themes
-   '("7e0dec7d9f3821acba56ab19083ed059a94753ed79ee89b0d8167b727ed6cb81" "380763a0ed87b880b905c604bf0c2925b767b43ffe42fb70048f33ffd2349ceb" "e70e87ad139f94d3ec5fdf782c978450fc2cb714d696e520b176ff797b97b8d2" "be84a2e5c70f991051d4aaf0f049fa11c172e5d784727e0b525565bb1533ec78" "e266d44fa3b75406394b979a3addc9b7f202348099cfde69e74ee6432f781336" "3c7a784b90f7abebb213869a21e84da462c26a1fda7e5bd0ffebf6ba12dbd041" "00cec71d41047ebabeb310a325c365d5bc4b7fab0a681a2a108d32fb161b4006" "0170347031e5dfa93813765bc4ef9269a5e357c0be01febfa3ae5e5fcb351f09" "3de5c795291a145452aeb961b1151e63ef1cb9565e3cdbd10521582b5fd02e9a" default))
+   '("7e0dec7d9f3821acba56ab19083ed059a94753ed79ee89b0d8167b727ed6cb81" default))
  '(org-agenda-files '("d:/Uni/CTS/CTS5/CG/CG.org"))
  '(package-selected-packages
-   '(move-text markdown-mode org-roam-ui org-roam flymake-languagetool yaml-mode flutter dart-mode org-re-reveal kanagawa-theme langtool auctex company cmake-mode kaolin-themes doom-themes command-log-mode))
+   '(move-text markdown-mode org-roam-ui org-roam flymake-languagetool yaml-mode org-re-reveal kanagawa-theme langtool auctex company cmake-mode command-log-mode))
  '(safe-local-variable-values
    '((org-roam-directory . "G:/Dokumente/MemoryPalace/")
      (org-roam-db-location . "./org-roam.db")
