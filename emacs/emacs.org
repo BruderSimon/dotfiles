@@ -1,0 +1,478 @@
+#+TITLE: Emacs Setup file
+#+AUTHOR: Simon Engel
+#+PROPERTY: header-args :tangle C:\\Users\\66che\\AppData\\Roaming\\.emacs.d\\init.el
+
+* Introduction
+This document contains the configuration file for emacs along with its
+doumentation. The .emacs configuration can be compiled with
+org-bable-tangle (C-c C-v t).
+
+* Appearance
+This section covers the appearance changing settings.
+
+#+begin_src emacs-lisp
+  (scroll-bar-mode -1)        ; Disable visible scrollbar
+  (tool-bar-mode -1)          ; Disable the toolbar
+  (tooltip-mode -1)           ; Disable tooltips
+  (set-fringe-mode 10)        ; Give some breathing room
+  (menu-bar-mode -1)          ; Disable the menu bar
+
+  ;;Set frame transparency and maximize windows by default.
+  (set-frame-parameter (selected-frame) 'alpha '(99 . 99))
+  (add-to-list 'default-frame-alist '(alpha . (99 . 99)))
+  (set-frame-parameter (selected-frame) 'fullscreen 'maximized)
+  (add-to-list 'default-frame-alist '(fullscreen . maximized))
+
+  ;; Enable line numbers for some modes
+  (dolist (mode '(text-mode-hook
+                  prog-mode-hook
+                  conf-mode-hook))
+  (add-hook mode (lambda () (display-line-numbers-mode 1))))
+
+  ;; Override some modes which derive from the above
+  (dolist (mode '(org-mode-hook))
+  (add-hook mode (lambda () (display-line-numbers-mode 0))))
+  (column-number-mode)
+
+#+end_src
+
+** Theme
+
+#+begin_src emacs-lisp
+(use-package kanagawa-themes
+  :ensure t)
+(load-theme 'kanagawa-wave :no-confirm)
+
+(use-package nibelung-theme
+  :vc ( :url "https://github.com/veschin/nibelung-theme"
+	:rev :newest)
+  :ensure t
+  :config)
+  ;;(load-theme 'nibelung t)
+  ;; or
+  ;;(load-theme 'nibelung-dark t))
+#+end_src
+
+
+* Path variables
+Path variables for external programms and files. These variables
+differ on each computer.
+
+ #+begin_src emacs-lisp
+;; Path Variables for better maintainance
+;;(setq local-ditaa-path "C:\\Programms\\ditaa\\ditaa0_9.jar")
+;;(setq local-ditaa-eps-path  "C:\\Programms\\ditaa\\DitaaEps.jar")
+(setq local-langtool-path "D:\\Programms\\LanguageTool-6.7\\languagetool-commandline.jar")
+(setq local-org-roam-db-path "D:\\org-roam\\")
+#+end_src
+
+* Package Manager
+Initializing packages
+
+ #+begin_src emacs-lisp
+   ;; Initialize package sources
+   (require 'package)
+#+end_src
+
+** package-archives
+Using melpa, elpa and org-mode elpa
+
+#+begin_src emacs-lisp
+  (setq package-archives '(("melpa" . "https://melpa.org/packages/")
+                           ("org" . "https://orgmode.org/elpa/")
+                           ("elpa" . "https://elpa.gnu.org/packages/")))
+  (package-initialize)
+  (unless package-archive-contents
+    (package-refresh-contents))
+#+end_src
+
+** use-package
+Make sure to have use-package installed. If not then install it.
+
+#+begin_src emacs-lisp
+   ;; Initialize use-package on non-Linux platforms
+   (unless (package-installed-p 'use-package)
+     (package-install 'use-package))
+   
+   (require 'use-package)
+   (setq use-package-always-ensure t)
+#+end_src
+
+
+* Settings
+Changing the behaviour of Emacs
+
+#+begin_src emacs-lisp
+  (set-default-coding-systems 'utf-8) ; Default coding system
+  (prefer-coding-system 'utf-8)
+  (pixel-scroll-precision-mode)
+
+  ;;Improve Scroling
+  (setq mouse-wheel-scroll-amount '(1 ((shift) . 1))) ;; one line at a time
+  (setq mouse-wheel-progressive-speed nil) ;; don't accelerate scrolling
+  (setq mouse-wheel-follow-mouse 't) ;; scroll window under mouse
+  (setq scroll-step 1) ;; keyboard scroll one line at a time
+
+  ;; Don't create backupfiles
+  (setq make-backup-files nil)
+
+  ;; Always split vertically
+  (setq split-width-threshold 160)
+  (setq split-height-threshold 80)
+#+end_src
+
+* Custom Functions
+
+** Messuring Start-up Time
+Measuring the start-up time is a crucial part to debug the
+configuration. No one wants to wait for too long unti emacs start
+up.
+
+#+begin_src emacs-lisp
+  ;; Messure Starup Time.
+  (setq gc-cons-threshold (* 50 1000 1000))
+
+  (defun efs/display-startup-time ()
+   (message "Emacs loaded in %s with %d garbage collections."
+    (format "%.2f seconds"
+     (float-time
+      (time-subtract after-init-time before-init-time)))
+    gcs-done))
+
+  (add-hook 'emacs-startup-hook #'efs/display-startup-time)
+
+#+end_src
+
+** common textsnippets
+These are common text snippets that I use and I want to have shotcuts to them
+#+begin_src emacs-lisp
+  ;; Insert Text Snippet for Org-mode Latex Export
+  (defun my/latex-org-export ()
+    (interactive)
+    (insert "#+TITLE:
+  ,#+SUBTITLE: Summer Semester 2025
+  ,#+AUTHOR: Simon Engel
+  ,#+SETUPFILE: $SetupPath$")
+    (backward-char))
+#+end_src
+
+** custom key-shortcuts
+#+begin_src emacs-lisp
+  (global-set-key (kbd "M-# M-1") #'my/latex-org-export)
+
+  (global-set-key (kbd "C-c <up>") #'windmove-up)
+  (global-set-key (kbd "C-c <left>") #'windmove-left)
+  (global-set-key (kbd "C-c <down>") #'windmove-down)
+  (global-set-key (kbd "C-c <right>") #'windmove-right)
+#+end_src
+
+** open file as root
+Copied from:
+https://gist.github.com/lambdacoresw/5440541d6ef3daa0cfd05bd88607ab5e
+ #+begin_src emacs-lisp
+(defun dired-open-file-as-root ()
+  "Open the file at point with sudo using tramp."
+  (interactive)
+  (let ((file (dired-get-file-for-visit)))
+    (find-file (concat "/sudo::" file))))
+(defun my-dired-sudo-setup ()
+  "Bind ! to open files as root in dired."
+  (define-key dired-mode-map (kbd "!") #'dired-open-file-as-root))
+(add-hook 'dired-mode-hook #'my-dired-sudo-setup)
+(defun reopen-as-root ()
+  "Reopen current file with sudo via tramp."
+  (interactive)
+  (when buffer-file-name
+    (find-alternate-file (concat "/sudo::" buffer-file-name))))
+#+end_src
+
+** Hideshow
+Functionality to collapse code functions/classes if wanted
+ #+begin_src emacs-lisp
+ ;; Hideshow to collapse code blocks
+ (add-hook 'prog-mode-hook #'hs-minor-mode)
+ (global-set-key (kbd "C-h <right>") 'hs-show-block)
+ (global-set-key (kbd "C-h <left>") 'hs-hide-block)
+
+#+end_src
+
+* Programming
+
+#+begin_src emacs-lisp
+;; Set the default style for all CC Mode languages to "stroustrup"
+(setq c-default-style "cc-mode")
+
+(c-add-style
+ "gnu-tabs-4"
+ '("gnu"
+   (c-basic-offset . 4)           ;; IndentWidth: 4
+   (indent-tabs-mode . t)         ;; UseTab: Always
+   (tab-width . 4)
+   (c-space-after-keyword . nil)
+   
+   ;; Pointer / Reference alignment
+   (c-offsets-alist
+    (arglist-cont-nonempty . +)
+    (substatement-open . 0))))
+
+#+end_src
+
+** CMake mode
+#+begin_src emacs-lisp
+;;CMake mode
+;;(setq load-path (cons (expand-file-name "/dir/with/cmake-mode") load-path))
+(use-package cmake-mode
+ :ensure t)
+#+end_src
+
+** eglot
+csharp and dart are languages I had to use at some point.
+#+begin_src emacs-lisp
+;;eglot
+(use-package eglot
+  :ensure t
+  :hook
+  (c-mode      . eglot-ensure)
+  (c++-mode    . eglot-ensure)
+  ;;(csharp-mode . eglot-ensure)
+  ;;(dart-mode . eglot-ensure)
+  :custom
+  (add-to-list 'eglot-server-programs '((c++-mode c-mode) "clangd"))
+  ;;(add-to-list 'eglot-server-programs '(csharp-mode . ("OmniSharp.exe" "-lsp")))
+  ;;dart eglot config
+  ;;(add-to-list 'eglot-server-programs '(dart-mode . ("dart" "language-server")))
+  )
+#+end_src
+
+** glsl-mode
+#+begin_src emacs-lisp
+(use-package glsl-mode
+  :ensure t
+  :init
+  (add-to-list 'auto-mode-alist '("\\.fx\\'" . glsl-mode)))
+#+end_src
+
+* Auto Complete
+
+** company-mode
+Using company-mode and ensuring it gets activitated along side other major modes
+#+begin_src emacs-lisp
+  (use-package company
+    :ensure t
+    :hook
+    (c-mode . company-mode)
+    (c++-mode . company-mode)
+    (cmake-mode . company-mode)
+    ;;(csharp-mode . company-mode)
+    ;;(dart-mode . company-mode)
+    )
+(use-package company-box
+  :hook (company-mode . company-box-mode))
+
+#+end_src
+
+** Corfu
+Corfu is a in-buffer completion packaged. It is supposed to be
+minimalistic and emacs native using the completion-at-point-funciton.
+#+begin_src emacs-lisp :tangle no
+(use-package corfu
+  :ensure t
+  :hook
+  (prog-mode . corfu-mode)
+  (eshell-mode . corfu-mode)
+  :init
+  ;;(global-corfu-mode) ;; Enambe Corfu globally
+  )
+;; Enable auto completion, configure delay, trigger and quitting
+(setq corfu-auto t
+      corfu-auto-delay 0.2
+      corfu-auto-trigger "." ;; Custom trigger characters
+      corfu-quit-no-match 'separator) ;; or t
+#+end_src
+
+* Markdown
+#+begin_src emacs-lisp
+;; Markdown-mode
+(use-package markdown-mode
+  :ensure t)
+#+end_src
+
+* move-text
+I realy like the org-mode functionality to move lines of code with the
+arrow key. This package enables me to use it in other major modes.
+
+#+begin_src emacs-lisp
+(use-package move-text
+  :ensure t)
+(move-text-default-bindings)
+#+end_src
+
+* Languagetool
+
+** langtool
+This packages uses to offline jar file of languagetool.
+#+begin_src emacs-lisp
+;;Language Tool
+(use-package langtool
+  :ensure t
+  :custom
+  (langtool-language-tool-jar local-langtool-path)
+  (langtool-default-language "en-GB"))
+#+end_src
+
+** flymake languagetool
+In theory this should enable the use of the online API of languagetool
+but it does not work at the moment. I need to fix it.
+
+#+begin_src emacs-lisp
+;; Flymake-languagetool API access
+;; (use-package flymake-languagetool
+;;   :ensure t
+;;   :hook ((text-mode       . flymake-languagetool-load)
+;;          (LaTeX-mode      . flymake-languagetool-load)
+;;          (org-mode        . flymake-languagetool-load)
+;;          (markdown-mode   . flymake-languagetool-load))
+;;   :custom
+;;   ;; LanguageTools API Remote Server Configuration
+;;   (flymake-languagetool-server-jar nil)
+;;   (flymake-languagetool-url "https://api.languagetool.org"))
+#+end_src
+
+* Auctex
+The package to use LaTeX in emacs. AucTeX is basically the best LaTeX editor.
+
+#+begin_src emacs-lisp
+;; Auctex
+(use-package auctex
+  :ensure t
+  :custom
+  (TeX-PDF-mode t)
+  (TeX-parse-self t) ; Enable parse on load.
+  (TeX-auto-save t) ; Enable parse on save.
+  :hook
+  (LaTeX-mode . turn-on-prettify-symbols-mode)
+  (LaTeX-mode . LaTeX-math-mode)
+  (LaTeX-math-mode . company-mode))
+#+end_src
+
+* Org-mode
+Here are org-mode related settings
+
+#+begin_src emacs-lisp 
+  ;; Org-mode latex Exportation
+  (with-eval-after-load 'ox-latex
+  (add-to-list 'org-latex-classes
+               '("org-plain-latex"
+                 "\\documentclass{article}
+             [NO-DEFAULT-PACKAGES]
+             [PACKAGES]
+             [EXTRA]"
+                 ("\\section{%s}" . "\\section*{%s}")
+                 ("\\subsection{%s}" . "\\subsection*{%s}")
+                 ("\\subsubsection{%s}" . "\\subsubsection*{%s}")
+                 ("\\paragraph{%s}" . "\\paragraph*{%s}")
+                 ("\\subparagraph{%s}" . "\\subparagraph*{%s}"))))
+
+  (setq org-latex-listings 't)
+  (setq org-latex-title-command "\\maketitle \\newpage")
+  (setq org-latex-toc-command "\\tableofcontents \\newpage")
+
+  (setq org-src-preserve-indentation t)
+#+end_src
+
+** Color Highlights
+Highlight certain features  
+#+begin_src emacs-lisp
+;; Org-mode Color Highlights
+(setq org-emphasis-alist
+  '(("*" (bold :foreground "red" ))
+    ("/" italic)
+    ("_" underline)
+    ("=" (:background "maroon" :foreground "white"))
+    ("~" (:background "deep sky blue" :foreground "MidnightBlue"))
+    ("+" (:strike-through t))))
+
+(global-set-key (kbd "C-c a") #'org-agenda)
+
+#+end_src
+
+** org-roam
+Org-roam is a very powerfull tool to create your own knowledge
+database. It is based on the Zettelkasten principle. An alternative
+would be Howm https://kaorahi.github.io/howm/
+#+begin_src emacs-lisp
+  ;; Org-roam
+    (use-package org-roam
+      :ensure t
+      :custom
+      (org-roam-v2-ack t) ;; acknowledge the use of version 2
+      (org-roam-completion-everywhere t)
+      (org-roam-directory local-org-roam-db-path)
+      (org-roam-capture-templates
+       '(("d" "default" plain
+          "%?"
+          :target (file+head "%<%Y%m%d%H%M%S>-${slug}.org" "#+title: ${title}\n")
+          :unnarrowed t)
+	 ("p" "paper" plain
+          "- Authors: \n- Journal/Conference: \n- URL: \n- Topic: "
+          :target (file+head "%<paper>-${slug}.org" "#+title: ${title}\n")
+          :unnarrowed t)
+         ))
+      :bind (("C-c n l" . org-roam-buffer-toggle)
+             ("C-c n f" . org-roam-node-find)
+             ("C-c n i" . org-roam-node-insert))
+      :config
+      (org-roam-setup))
+  ;; Org-roam-ui
+  (use-package org-roam-ui
+    :ensure t)
+
+#+end_src
+
+* Magit
+#+begin_src emacs-lisp
+  ;; Magit
+  (use-package magit
+   :ensure t)
+#+end_src
+
+* Recent files
+Keep a list fo recently opend files for faster access.
+ #+begin_src emacs-lisp
+;; Recent files
+(use-package recentf
+  :init
+  (setq recentf-max-saved-items 200
+	recentf-max-menu-items 15)
+  (recentf-mode +1)
+  :hook
+  (after-init . recentf-open-files))
+(global-set-key (kbd "C-c r") #'recentf-open-files)
+;;(initial-buffer-choice 'recentf-open-files)
+
+#+end_src
+
+* Deprecated Settings/packages
+These are settings that were used once, because they had a use-case
+but were either replaced by a better solution or removed as the
+use-case no longer was applicable.
+
+I want to keep the to have a collection of past settings/packages so I
+can apply them again when needed.
+
+#+begin_src emacs-lisp :tangle no
+  ;;(setq local-reveal-js-path "file:///D:/Programme/reveal.js")
+  
+  ;;dart-mode
+  ;; (use-package dart-mode
+  ;;   :ensure t)
+  ;; ;;flutter
+  ;; (use-package flutter
+  ;;   :ensure t
+  ;;   :after dart-mode)
+
+  ;;Yaml-mode
+  (use-package yaml-mode
+    :ensure t)
+
+#+end_src
