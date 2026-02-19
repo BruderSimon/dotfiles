@@ -1,6 +1,6 @@
 #+TITLE: Emacs Setup file
 #+AUTHOR: Simon Engel
-#+PROPERTY: header-args :tangle C:\\Users\\66che\\AppData\\Roaming\\.emacs.d\\init.el
+#+PROPERTY: header-args :tangle PATH
 
 * Introduction
 This document contains the configuration file for emacs along with its
@@ -43,11 +43,11 @@ This section covers the appearance changing settings.
   :ensure t)
 (load-theme 'kanagawa-wave :no-confirm)
 
-(use-package nibelung-theme
-  :vc ( :url "https://github.com/veschin/nibelung-theme"
-	:rev :newest)
-  :ensure t
-  :config)
+;; (use-package nibelung-theme
+;;   :vc ( :url "https://github.com/veschin/nibelung-theme"
+;; 	:rev :newest)
+;;   :ensure t
+;;   :config)
   ;;(load-theme 'nibelung t)
   ;; or
   ;;(load-theme 'nibelung-dark t))
@@ -62,8 +62,8 @@ differ on each computer.
 ;; Path Variables for better maintainance
 ;;(setq local-ditaa-path "C:\\Programms\\ditaa\\ditaa0_9.jar")
 ;;(setq local-ditaa-eps-path  "C:\\Programms\\ditaa\\DitaaEps.jar")
-(setq local-langtool-path "D:\\Programms\\LanguageTool-6.7\\languagetool-commandline.jar")
-(setq local-org-roam-db-path "D:\\org-roam\\")
+(setq local-langtool-path "PATH")
+(setq local-org-roam-db-path "PATH")
 #+end_src
 
 * Package Manager
@@ -324,7 +324,7 @@ This packages uses to offline jar file of languagetool.
 In theory this should enable the use of the online API of languagetool
 but it does not work at the moment. I need to fix it.
 
-#+begin_src emacs-lisp
+#+begin_src emacs-lisp  :tangle no
 ;; Flymake-languagetool API access
 ;; (use-package flymake-languagetool
 ;;   :ensure t
@@ -414,7 +414,7 @@ would be Howm https://kaorahi.github.io/howm/
           :target (file+head "%<%Y%m%d%H%M%S>-${slug}.org" "#+title: ${title}\n")
           :unnarrowed t)
 	 ("p" "paper" plain
-          "- Authors: \n- Journal/Conference: \n- URL: \n- Topic: "
+          "\n- Authors: \n- Journal/Conference: \n- URL: \n- Topic: "
           :target (file+head "%<paper>-${slug}.org" "#+title: ${title}\n")
           :unnarrowed t)
          ))
