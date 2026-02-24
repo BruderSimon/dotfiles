@@ -414,13 +414,16 @@ would be Howm https://kaorahi.github.io/howm/
           :target (file+head "%<%Y%m%d%H%M%S>-${slug}.org" "#+title: ${title}\n")
           :unnarrowed t)
 	 ("p" "paper" plain
-          "\n- Authors: \n- Journal/Conference: \n- URL: \n- Topic: "
+          " \n- Authors: \n- Journal/Conference: \n- URL: \n- Topic: \n* What is the problem? \n* What is the core idea of the solution? \n* What was surprising/unconvincing? \n* Refrences"
           :target (file+head "%<paper>-${slug}.org" "#+title: ${title}\n")
           :unnarrowed t)
          ))
       :bind (("C-c n l" . org-roam-buffer-toggle)
              ("C-c n f" . org-roam-node-find)
-             ("C-c n i" . org-roam-node-insert))
+             ("C-c n i" . org-roam-node-insert)
+	     ("C-c d c" . org-roam-dailies-capture-date)
+	     ("C-c d g" . org-roam-dailies-goto-date)
+	     )
       :config
       (org-roam-setup))
   ;; Org-roam-ui
