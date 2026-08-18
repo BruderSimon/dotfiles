@@ -1,6 +1,6 @@
 #+TITLE: Emacs Setup file
 #+AUTHOR: Simon Engel
-#+PROPERTY: header-args :tangle PATH
+#+PROPERTY: header-args :tangle C:\\Users\\66che\\AppData\\Roaming\\.emacs.d\\init.el
 
 * Introduction
 This document contains the configuration file for emacs along with its
@@ -62,8 +62,8 @@ differ on each computer.
 ;; Path Variables for better maintainance
 ;;(setq local-ditaa-path "C:\\Programms\\ditaa\\ditaa0_9.jar")
 ;;(setq local-ditaa-eps-path  "C:\\Programms\\ditaa\\DitaaEps.jar")
-(setq local-langtool-path "PATH")
-(setq local-org-roam-db-path "PATH")
+(setq local-langtool-path "D:\\Programms\\LanguageTool-6.7\\languagetool-commandline.jar")
+(setq local-org-roam-db-path "D:\\org-roam\\")
 #+end_src
 
 * Package Manager
@@ -215,6 +215,14 @@ Functionality to collapse code functions/classes if wanted
     (arglist-cont-nonempty . +)
     (substatement-open . 0))))
 
+(c-add-style
+ "LLVM"
+ '("cc-mode"
+   (c-basic-offset . 2)
+   (indent-tabs-mode . nil)
+   (c-space-after-keyword . t)
+   ))
+
 #+end_src
 
 ** CMake mode
@@ -307,7 +315,7 @@ arrow key. This package enables me to use it in other major modes.
 (move-text-default-bindings)
 #+end_src
 
-* Languagetool
+* Language
 
 ** langtool
 This packages uses to offline jar file of languagetool.
@@ -338,6 +346,18 @@ but it does not work at the moment. I need to fix it.
 ;;   (flymake-languagetool-url "https://api.languagetool.org"))
 #+end_src
 
+** Power-Thesaurus
+emacs-powerthesaurus is a plugin that integrates Emacs with the amazing
+powerthesaurus.org service for finding synonyms, antonyms, and related
+terms.
+#+begin_src emacs-lisp
+(use-package powerthesaurus
+  :ensure t
+  :bind (("C-c p l" . powerthesaurus-lookup-dwim)
+	 ("C-c p s" . powerthesaurus-lookup-synonyms-dwim)
+	 ("C-c p a" . powerthesaurus-lookup-antonyms-dwim))
+ )
+#+end_src
 * Auctex
 The package to use LaTeX in emacs. AucTeX is basically the best LaTeX editor.
 
@@ -414,7 +434,7 @@ would be Howm https://kaorahi.github.io/howm/
           :target (file+head "%<%Y%m%d%H%M%S>-${slug}.org" "#+title: ${title}\n")
           :unnarrowed t)
 	 ("p" "paper" plain
-          " \n- Authors: \n- Journal/Conference: \n- URL: \n- Topic: \n* What is the problem? \n* What is the core idea of the solution? \n* What was surprising/unconvincing? \n* Refrences"
+          " \n- Authors: \n- Journal/Conference: \n- URL: \n- Topic: \n* What is the problem? \n* What is the core idea of the solution? \n* What was surprising/unconvincing? \n* References"
           :target (file+head "%<paper>-${slug}.org" "#+title: ${title}\n")
           :unnarrowed t)
          ))
@@ -430,6 +450,24 @@ would be Howm https://kaorahi.github.io/howm/
   (use-package org-roam-ui
     :ensure t)
 
+#+end_src
+
+** org-rich-yank
+Yanking source-code into org-mode with context related source blocks.
+https://github.com/unhammer/org-rich-yank
+
+The =:demand t= in there is because we never know when the user will hit
+C-M-y, so we always have to store the current buffer on kills. You can
+remove the =:demand t= and have lazy/deferred loading, but then the
+first time you hit C-M-y after startup, you’ll get a message that you
+have to kill the selection again.
+
+#+begin_src emacs-lisp
+(use-package org-rich-yank
+  :ensure t
+  ;;:demand t
+  :bind (:map org-mode-map
+              ("C-M-y" . org-rich-yank)))
 #+end_src
 
 * Magit
