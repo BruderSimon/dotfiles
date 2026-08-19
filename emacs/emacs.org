@@ -443,6 +443,8 @@ would be Howm https://kaorahi.github.io/howm/
              ("C-c n i" . org-roam-node-insert)
 	     ("C-c d c" . org-roam-dailies-capture-date)
 	     ("C-c d g" . org-roam-dailies-goto-date)
+	     ("C-c d t" . org-roam-dailies-goto-today)
+	     ("C-c d y" . org-roam-dailies-goto-yesterday)
 	     )
       :config
       (org-roam-setup))
