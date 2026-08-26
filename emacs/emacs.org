@@ -60,10 +60,10 @@ differ on each computer.
 
  #+begin_src emacs-lisp
 ;; Path Variables for better maintainance
-;;(setq local-ditaa-path "C:\\Programms\\ditaa\\ditaa0_9.jar")
-;;(setq local-ditaa-eps-path  "C:\\Programms\\ditaa\\DitaaEps.jar")
-(setq local-langtool-path "D:\\Programms\\LanguageTool-6.7\\languagetool-commandline.jar")
-(setq local-org-roam-db-path "D:\\org-roam\\")
+;;(setq local-ditaa-path "")
+;;(setq local-ditaa-eps-path  "")
+(setq local-langtool-path "")
+(setq local-org-roam-db-path "")
 #+end_src
 
 * Package Manager
@@ -398,6 +398,10 @@ Here are org-mode related settings
   (setq org-latex-toc-command "\\tableofcontents \\newpage")
 
   (setq org-src-preserve-indentation t)
+  ;; Adding org-roam dailys to org-agenda files
+  (let ((daily-path (expand-file-name "daily" local-org-roam-db-path)))
+    (add-to-list 'org-agenda-files daily-path))
+
 #+end_src
 
 ** Color Highlights
