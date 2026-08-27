@@ -11,28 +11,28 @@ org-bable-tangle (C-c C-v t).
 This section covers the appearance changing settings.
 
 #+begin_src emacs-lisp
-  (scroll-bar-mode -1)        ; Disable visible scrollbar
-  (tool-bar-mode -1)          ; Disable the toolbar
-  (tooltip-mode -1)           ; Disable tooltips
-  (set-fringe-mode 10)        ; Give some breathing room
-  (menu-bar-mode -1)          ; Disable the menu bar
+(scroll-bar-mode -1)        ; Disable visible scrollbar
+(tool-bar-mode -1)          ; Disable the toolbar
+(tooltip-mode -1)           ; Disable tooltips
+(set-fringe-mode 10)        ; Give some breathing room
+(menu-bar-mode -1)          ; Disable the menu bar
 
-  ;;Set frame transparency and maximize windows by default.
-  (set-frame-parameter (selected-frame) 'alpha '(99 . 99))
-  (add-to-list 'default-frame-alist '(alpha . (99 . 99)))
-  (set-frame-parameter (selected-frame) 'fullscreen 'maximized)
-  (add-to-list 'default-frame-alist '(fullscreen . maximized))
+;;Set frame transparency and maximize windows by default.
+(set-frame-parameter (selected-frame) 'alpha '(99 . 99))
+(add-to-list 'default-frame-alist '(alpha . (99 . 99)))
+(set-frame-parameter (selected-frame) 'fullscreen 'maximized)
+(add-to-list 'default-frame-alist '(fullscreen . maximized))
 
-  ;; Enable line numbers for some modes
-  (dolist (mode '(text-mode-hook
-                  prog-mode-hook
-                  conf-mode-hook))
+;; Enable line numbers for some modes
+(dolist (mode '(text-mode-hook
+                prog-mode-hook
+                conf-mode-hook))
   (add-hook mode (lambda () (display-line-numbers-mode 1))))
 
-  ;; Override some modes which derive from the above
-  (dolist (mode '(org-mode-hook))
+;; Override some modes which derive from the above
+(dolist (mode '(org-mode-hook))
   (add-hook mode (lambda () (display-line-numbers-mode 0))))
-  (column-number-mode)
+(column-number-mode)
 
 #+end_src
 
@@ -48,17 +48,23 @@ This section covers the appearance changing settings.
 ;; 	:rev :newest)
 ;;   :ensure t
 ;;   :config)
-  ;;(load-theme 'nibelung t)
-  ;; or
-  ;;(load-theme 'nibelung-dark t))
+;;(load-theme 'nibelung t)
+;; or
+;;(load-theme 'nibelung-dark t))
 #+end_src
 
+** Fonts
+
+#+begin_src emacs-lisp
+;;For Unicode Characters
+(set-fontset-font t 'symbol "Segoe UI Symbol")
+#+end_src
 
 * Path variables
 Path variables for external programms and files. These variables
 differ on each computer.
 
- #+begin_src emacs-lisp
+#+begin_src emacs-lisp
 ;; Path Variables for better maintainance
 ;;(setq local-ditaa-path "")
 ;;(setq local-ditaa-eps-path  "")
@@ -69,107 +75,105 @@ differ on each computer.
 * Package Manager
 Initializing packages
 
- #+begin_src emacs-lisp
-   ;; Initialize package sources
-   (require 'package)
+#+begin_src emacs-lisp
+;; Initialize package sources
+(require 'package)
 #+end_src
 
 ** package-archives
 Using melpa, elpa and org-mode elpa
 
 #+begin_src emacs-lisp
-  (setq package-archives '(("melpa" . "https://melpa.org/packages/")
-                           ("org" . "https://orgmode.org/elpa/")
-                           ("elpa" . "https://elpa.gnu.org/packages/")))
-  (package-initialize)
-  (unless package-archive-contents
-    (package-refresh-contents))
+(setq package-archives '(("melpa" . "https://melpa.org/packages/")
+                         ("org" . "https://orgmode.org/elpa/")
+                         ("elpa" . "https://elpa.gnu.org/packages/")))
+(package-initialize)
+(unless package-archive-contents
+  (package-refresh-contents))
 #+end_src
 
 ** use-package
 Make sure to have use-package installed. If not then install it.
 
 #+begin_src emacs-lisp
-   ;; Initialize use-package on non-Linux platforms
-   (unless (package-installed-p 'use-package)
-     (package-install 'use-package))
-   
-   (require 'use-package)
-   (setq use-package-always-ensure t)
-#+end_src
+;; Initialize use-package on non-Linux platforms
+(unless (package-installed-p 'use-package)
+  (package-install 'use-package))
 
+(require 'use-package)
+(setq use-package-always-ensure t)
+#+end_src
 
 * Settings
 Changing the behaviour of Emacs
 
 #+begin_src emacs-lisp
-  (set-default-coding-systems 'utf-8) ; Default coding system
-  (prefer-coding-system 'utf-8)
-  (pixel-scroll-precision-mode)
+(set-default-coding-systems 'utf-8) ; Default coding system
+(prefer-coding-system 'utf-8)
+(pixel-scroll-precision-mode)
 
-  ;;Improve Scroling
-  (setq mouse-wheel-scroll-amount '(1 ((shift) . 1))) ;; one line at a time
-  (setq mouse-wheel-progressive-speed nil) ;; don't accelerate scrolling
-  (setq mouse-wheel-follow-mouse 't) ;; scroll window under mouse
-  (setq scroll-step 1) ;; keyboard scroll one line at a time
+;;Improve Scroling
+(setq mouse-wheel-scroll-amount '(1 ((shift) . 1))) ;; one line at a time
+(setq mouse-wheel-progressive-speed nil) ;; don't accelerate scrolling
+(setq mouse-wheel-follow-mouse 't) ;; scroll window under mouse
+(setq scroll-step 1) ;; keyboard scroll one line at a time
 
-  ;; Don't create backupfiles
-  (setq make-backup-files nil)
+;; Don't create backupfiles
+(setq make-backup-files nil)
 
-  ;; Always split vertically
-  (setq split-width-threshold 160)
-  (setq split-height-threshold 80)
+;; Always split vertically
+(setq split-width-threshold 160)
+(setq split-height-threshold 80)
 #+end_src
 
 * Custom Functions
-
 ** Messuring Start-up Time
 Measuring the start-up time is a crucial part to debug the
 configuration. No one wants to wait for too long unti emacs start
 up.
 
 #+begin_src emacs-lisp
-  ;; Messure Starup Time.
-  (setq gc-cons-threshold (* 50 1000 1000))
+;; Messure Starup Time.
+(setq gc-cons-threshold (* 50 1000 1000))
 
-  (defun efs/display-startup-time ()
-   (message "Emacs loaded in %s with %d garbage collections."
-    (format "%.2f seconds"
-     (float-time
-      (time-subtract after-init-time before-init-time)))
-    gcs-done))
+(defun efs/display-startup-time ()
+  (message "Emacs loaded in %s with %d garbage collections."
+	   (format "%.2f seconds"
+		   (float-time
+		    (time-subtract after-init-time before-init-time)))
+	   gcs-done))
 
-  (add-hook 'emacs-startup-hook #'efs/display-startup-time)
+(add-hook 'emacs-startup-hook #'efs/display-startup-time)
 
 #+end_src
 
 ** common textsnippets
 These are common text snippets that I use and I want to have shotcuts to them
 #+begin_src emacs-lisp
-  ;; Insert Text Snippet for Org-mode Latex Export
-  (defun my/latex-org-export ()
-    (interactive)
-    (insert "#+TITLE:
+;; Insert Text Snippet for Org-mode Latex Export
+(defun my/latex-org-export ()
+  (interactive)
+  (insert "#+TITLE:
   ,#+SUBTITLE: Summer Semester 2025
   ,#+AUTHOR: Simon Engel
   ,#+SETUPFILE: $SetupPath$")
-    (backward-char))
+  (backward-char))
 #+end_src
 
 ** custom key-shortcuts
 #+begin_src emacs-lisp
-  (global-set-key (kbd "M-# M-1") #'my/latex-org-export)
+(global-set-key (kbd "M-# M-1") #'my/latex-org-export)
 
-  (global-set-key (kbd "C-c <up>") #'windmove-up)
-  (global-set-key (kbd "C-c <left>") #'windmove-left)
-  (global-set-key (kbd "C-c <down>") #'windmove-down)
-  (global-set-key (kbd "C-c <right>") #'windmove-right)
+(global-set-key (kbd "C-c <up>") #'windmove-up)
+(global-set-key (kbd "C-c <left>") #'windmove-left)
+(global-set-key (kbd "C-c <down>") #'windmove-down)
+(global-set-key (kbd "C-c <right>") #'windmove-right)
 #+end_src
 
 ** open file as root
 Copied from:
 https://gist.github.com/lambdacoresw/5440541d6ef3daa0cfd05bd88607ab5e
- #+begin_src emacs-lisp
+#+begin_src emacs-lisp
 (defun dired-open-file-as-root ()
   "Open the file at point with sudo using tramp."
   (interactive)
@@ -188,11 +192,11 @@ https://gist.github.com/lambdacoresw/5440541d6ef3daa0cfd05bd88607ab5e
 
 ** Hideshow
 Functionality to collapse code functions/classes if wanted
- #+begin_src emacs-lisp
- ;; Hideshow to collapse code blocks
- (add-hook 'prog-mode-hook #'hs-minor-mode)
- (global-set-key (kbd "C-h <right>") 'hs-show-block)
- (global-set-key (kbd "C-h <left>") 'hs-hide-block)
+#+begin_src emacs-lisp
+;; Hideshow to collapse code blocks
+(add-hook 'prog-mode-hook #'hs-minor-mode)
+(global-set-key (kbd "C-h <right>") 'hs-show-block)
+(global-set-key (kbd "C-h <left>") 'hs-hide-block)
 
 #+end_src
 
@@ -230,7 +234,7 @@ Functionality to collapse code functions/classes if wanted
 ;;CMake mode
 ;;(setq load-path (cons (expand-file-name "/dir/with/cmake-mode") load-path))
 (use-package cmake-mode
- :ensure t)
+  :ensure t)
 #+end_src
 
 ** eglot
@@ -265,15 +269,15 @@ csharp and dart are languages I had to use at some point.
 ** company-mode
 Using company-mode and ensuring it gets activitated along side other major modes
 #+begin_src emacs-lisp
-  (use-package company
-    :ensure t
-    :hook
-    (c-mode . company-mode)
-    (c++-mode . company-mode)
-    (cmake-mode . company-mode)
-    ;;(csharp-mode . company-mode)
-    ;;(dart-mode . company-mode)
-    )
+(use-package company
+  :ensure t
+  :hook
+  (c-mode . company-mode)
+  (c++-mode . company-mode)
+  (cmake-mode . company-mode)
+  ;;(csharp-mode . company-mode)
+  ;;(dart-mode . company-mode)
+  )
 (use-package company-box
   :hook (company-mode . company-box-mode))
 
@@ -356,7 +360,7 @@ terms.
   :bind (("C-c p l" . powerthesaurus-lookup-dwim)
 	 ("C-c p s" . powerthesaurus-lookup-synonyms-dwim)
 	 ("C-c p a" . powerthesaurus-lookup-antonyms-dwim))
- )
+  )
 #+end_src
 * Auctex
 The package to use LaTeX in emacs. AucTeX is basically the best LaTeX editor.
@@ -379,8 +383,8 @@ The package to use LaTeX in emacs. AucTeX is basically the best LaTeX editor.
 Here are org-mode related settings
 
 #+begin_src emacs-lisp 
-  ;; Org-mode latex Exportation
-  (with-eval-after-load 'ox-latex
+;; Org-mode latex Exportation
+(with-eval-after-load 'ox-latex
   (add-to-list 'org-latex-classes
                '("org-plain-latex"
                  "\\documentclass{article}
@@ -393,14 +397,20 @@ Here are org-mode related settings
                  ("\\paragraph{%s}" . "\\paragraph*{%s}")
                  ("\\subparagraph{%s}" . "\\subparagraph*{%s}"))))
 
-  (setq org-latex-listings 't)
-  (setq org-latex-title-command "\\maketitle \\newpage")
-  (setq org-latex-toc-command "\\tableofcontents \\newpage")
+(setq org-latex-listings 't)
+(setq org-latex-title-command "\\maketitle \\newpage")
+(setq org-latex-toc-command "\\tableofcontents \\newpage")
 
-  (setq org-src-preserve-indentation t)
-  ;; Adding org-roam dailys to org-agenda files
+(setq org-src-preserve-indentation t)
+;; Adding org-roam dailys to org-agenda files
+(with-eval-after-load 'org-agenda
   (let ((daily-path (expand-file-name "daily" local-org-roam-db-path)))
-    (add-to-list 'org-agenda-files daily-path))
+    (add-to-list 'org-agenda-files daily-path)))
+
+(setq org-todo-keywords
+      '((sequence "TODO" "|" "DONE")
+        (sequence "REPORT" "BUG" "KNOWNCAUSE" "|" "FIXED")
+        (sequence "|" "CANCELED")))
 
 #+end_src
 
@@ -409,12 +419,12 @@ Highlight certain features
 #+begin_src emacs-lisp
 ;; Org-mode Color Highlights
 (setq org-emphasis-alist
-  '(("*" (bold :foreground "red" ))
-    ("/" italic)
-    ("_" underline)
-    ("=" (:background "maroon" :foreground "white"))
-    ("~" (:background "deep sky blue" :foreground "MidnightBlue"))
-    ("+" (:strike-through t))))
+      '(("*" (bold :foreground "red" ))
+	("/" italic)
+	("_" underline)
+	("=" (:background "maroon" :foreground "white"))
+	("~" (:background "deep sky blue" :foreground "MidnightBlue"))
+	("+" (:strike-through t))))
 
 (global-set-key (kbd "C-c a") #'org-agenda)
 
@@ -425,36 +435,36 @@ Org-roam is a very powerfull tool to create your own knowledge
 database. It is based on the Zettelkasten principle. An alternative
 would be Howm https://kaorahi.github.io/howm/
 #+begin_src emacs-lisp
-  ;; Org-roam
-    (use-package org-roam
-      :ensure t
-      :custom
-      (org-roam-v2-ack t) ;; acknowledge the use of version 2
-      (org-roam-completion-everywhere t)
-      (org-roam-directory local-org-roam-db-path)
-      (org-roam-capture-templates
-       '(("d" "default" plain
-          "%?"
-          :target (file+head "%<%Y%m%d%H%M%S>-${slug}.org" "#+title: ${title}\n")
-          :unnarrowed t)
-	 ("p" "paper" plain
-          " \n- Authors: \n- Journal/Conference: \n- URL: \n- Topic: \n* What is the problem? \n* What is the core idea of the solution? \n* What was surprising/unconvincing? \n* References"
-          :target (file+head "%<paper>-${slug}.org" "#+title: ${title}\n")
-          :unnarrowed t)
-         ))
-      :bind (("C-c n l" . org-roam-buffer-toggle)
-             ("C-c n f" . org-roam-node-find)
-             ("C-c n i" . org-roam-node-insert)
-	     ("C-c d c" . org-roam-dailies-capture-date)
-	     ("C-c d g" . org-roam-dailies-goto-date)
-	     ("C-c d t" . org-roam-dailies-goto-today)
-	     ("C-c d y" . org-roam-dailies-goto-yesterday)
-	     )
-      :config
-      (org-roam-setup))
-  ;; Org-roam-ui
-  (use-package org-roam-ui
-    :ensure t)
+;; Org-roam
+(use-package org-roam
+  :ensure t
+  :custom
+  (org-roam-v2-ack t) ;; acknowledge the use of version 2
+  (org-roam-completion-everywhere t)
+  (org-roam-directory local-org-roam-db-path)
+  (org-roam-capture-templates
+   '(("d" "default" plain
+      "%?"
+      :target (file+head "%<%Y%m%d%H%M%S>-${slug}.org" "#+title: ${title}\n")
+      :unnarrowed t)
+     ("p" "paper" plain
+      " \n- Authors: \n- Journal/Conference: \n- URL: \n- Topic: \n* What is the problem? \n* What is the core idea of the solution? \n* What was surprising/unconvincing? \n* References"
+      :target (file+head "%<paper>-${slug}.org" "#+title: ${title}\n")
+      :unnarrowed t)
+     ))
+  :bind (("C-c n l" . org-roam-buffer-toggle)
+         ("C-c n f" . org-roam-node-find)
+         ("C-c n i" . org-roam-node-insert)
+	 ("C-c d c" . org-roam-dailies-capture-date)
+	 ("C-c d g" . org-roam-dailies-goto-date)
+	 ("C-c d t" . org-roam-dailies-goto-today)
+	 ("C-c d y" . org-roam-dailies-goto-yesterday)
+	 )
+  :config
+  (org-roam-setup))
+;; Org-roam-ui
+(use-package org-roam-ui
+  :ensure t)
 
 #+end_src
 
@@ -478,14 +488,14 @@ have to kill the selection again.
 
 * Magit
 #+begin_src emacs-lisp
-  ;; Magit
-  (use-package magit
-   :ensure t)
+;; Magit
+(use-package magit
+  :ensure t)
 #+end_src
 
 * Recent files
 Keep a list fo recently opend files for faster access.
- #+begin_src emacs-lisp
+#+begin_src emacs-lisp
 ;; Recent files
 (use-package recentf
   :init
@@ -498,7 +508,22 @@ Keep a list fo recently opend files for faster access.
 ;;(initial-buffer-choice 'recentf-open-files)
 
 #+end_src
+* AI/LLM
+LLM integration into emacs.
 
+** agent-shell
+Agent shell is (in my opinion) the best LLM integration into emacs. It
+is clean and easy to use. The setup can be a bit tricky, but nothing
+major. Only the acp server and ai programms are needed.
+
+For Claud Code you should install the claud code terminal
+version. Additionally you he the claud agent acp to have agent-shell
+communicate with claude.
+
+#+begin_src emacs-lisp
+(use-package agent-shell
+  :ensure t)
+#+end_src
 * Deprecated Settings/packages
 These are settings that were used once, because they had a use-case
 but were either replaced by a better solution or removed as the
@@ -508,18 +533,18 @@ I want to keep the to have a collection of past settings/packages so I
 can apply them again when needed.
 
 #+begin_src emacs-lisp :tangle no
-  ;;(setq local-reveal-js-path "file:///D:/Programme/reveal.js")
-  
-  ;;dart-mode
-  ;; (use-package dart-mode
-  ;;   :ensure t)
-  ;; ;;flutter
-  ;; (use-package flutter
-  ;;   :ensure t
-  ;;   :after dart-mode)
+;;(setq local-reveal-js-path "file:///D:/Programme/reveal.js")
 
-  ;;Yaml-mode
-  (use-package yaml-mode
-    :ensure t)
+;;dart-mode
+;; (use-package dart-mode
+;;   :ensure t)
+;; ;;flutter
+;; (use-package flutter
+;;   :ensure t
+;;   :after dart-mode)
+
+;;Yaml-mode
+(use-package yaml-mode
+  :ensure t)
 
 #+end_src
