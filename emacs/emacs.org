@@ -1,6 +1,7 @@
 #+TITLE: Emacs Setup file
 #+AUTHOR: Simon Engel
-#+PROPERTY: header-args :tangle C:\\Users\\66che\\AppData\\Roaming\\.emacs.d\\init.el
+#+PROPERTY: header-args :tangle ...\\.emacs.d\\init.el
+#+STARTUP: overview
 
 * Introduction
 This document contains the configuration file for emacs along with its
@@ -237,15 +238,33 @@ Functionality to collapse code functions/classes if wanted
   :ensure t)
 #+end_src
 
+** cuda-mode
+cuda-mode is a derivative of c++-mode to use eglot with cuda files
+more convininetly. Clangd can be used as a LSP for cuda, but maybe it
+needs a little configuration.
+#+begin_src emacs-lisp
+(use-package cuda-mode
+  :ensure t)
+#+end_src
+
+These are the cuda flags fro clangd. Put them into a ~.clangd~ file in
+the project root folder.
+#+begin_example
+CompileFlags:
+  Add: [-xcuda, --cuda-path=/usr/local/cuda]
+#+end_example
 ** eglot
-csharp and dart are languages I had to use at some point.
+Eglot is the LSP client that I use. The usage is pretty straight
+forward. Some languages are commented out as I don't require them at
+the moment.
 #+begin_src emacs-lisp
 ;;eglot
 (use-package eglot
   :ensure t
   :hook
-  (c-mode      . eglot-ensure)
-  (c++-mode    . eglot-ensure)
+  (c-mode     . eglot-ensure)
+  (c++-mode   . eglot-ensure)
+  (cuda-mode  . eglot-ensure)
   ;;(csharp-mode . eglot-ensure)
   ;;(dart-mode . eglot-ensure)
   :custom
