@@ -290,13 +290,10 @@ the moment.
 #+begin_src emacs-lisp
 ;;eglot
 (use-package eglot
-  :ensure t
   :hook
-  (c-mode     . eglot-ensure)
-  (c++-mode   . eglot-ensure)
-  (cuda-mode  . eglot-ensure)
-  :custom
-  (add-to-list 'eglot-server-programs '((c++-mode c-mode) "clangd"))
+  ((c-mode c++-mode cuda-mode lua-mode) . eglot-ensure)
+  :config
+  (add-to-list 'eglot-server-programs '(cuda-mode "clangd"))
   )
 #+end_src
 ** eldoc
