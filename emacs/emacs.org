@@ -8,6 +8,13 @@ This document contains the configuration file for emacs along with its
 doumentation. The .emacs configuration can be compiled with
 org-bable-tangle (C-c C-v t).
 
+Lexical binding is enabled in this configuration file to enforce
+lexical scoping and support functional closures. This setting
+optimizes runtime execution speed and ensures strict variable scope
+validation during byte-compilation.
+#+begin_src emacs-lisp
+;; -*- lexical-binding: t; -*-
+#+end_src
 * Appearance
 This section covers the appearance changing settings.
 
@@ -43,7 +50,9 @@ This section covers the appearance changing settings.
 (use-package kanagawa-themes
   :ensure t)
 (load-theme 'kanagawa-wave :no-confirm)
+#+end_src
 
+#+begin_src emacs-lisp :tangle no
 ;; (use-package nibelung-theme
 ;;   :vc ( :url "https://github.com/veschin/nibelung-theme"
 ;; 	:rev :newest)
@@ -91,6 +100,9 @@ Using melpa, elpa and org-mode elpa
 (package-initialize)
 (unless package-archive-contents
   (package-refresh-contents))
+
+;; Consider built-in packages for upgrade
+(setq package-install-upgrade-built-in t)
 #+end_src
 
 ** use-package
@@ -125,6 +137,22 @@ Changing the behaviour of Emacs
 ;; Always split vertically
 (setq split-width-threshold 160)
 (setq split-height-threshold 80)
+#+end_src
+
+** COMMENT Emacs Server
+Starting a Server unless one is running
+#+begin_src emacs-lisp
+(load "server")
+(unless (server-running-p) (server-start))
+#+end_src
+
+Giving Emacs server the path variables on linux
+#+begin_src emacs-lisp
+(use-package exec-path-from-shell
+  :ensure t
+  :config
+  (when (daemonp)
+    (exec-path-from-shell-initialize)))
 #+end_src
 
 * Custom Functions
@@ -202,10 +230,12 @@ Functionality to collapse code functions/classes if wanted
 #+end_src
 
 * Programming
-
+** cc-mode style
+Coding style for cc-modes
 #+begin_src emacs-lisp
-;; Set the default style for all CC Mode languages to "stroustrup"
-(setq c-default-style "cc-mode")
+(setq c-default-style "stroustrup")
+(setq c-basic-offset 4) ;; Set basic indentation to 4 spaces
+(setq indent-tabs-mode nil) ;; Use spaces instead of tabs
 
 (c-add-style
  "gnu-tabs-4"
@@ -265,14 +295,16 @@ the moment.
   (c-mode     . eglot-ensure)
   (c++-mode   . eglot-ensure)
   (cuda-mode  . eglot-ensure)
-  ;;(csharp-mode . eglot-ensure)
-  ;;(dart-mode . eglot-ensure)
   :custom
   (add-to-list 'eglot-server-programs '((c++-mode c-mode) "clangd"))
-  ;;(add-to-list 'eglot-server-programs '(csharp-mode . ("OmniSharp.exe" "-lsp")))
-  ;;dart eglot config
-  ;;(add-to-list 'eglot-server-programs '(dart-mode . ("dart" "language-server")))
   )
+#+end_src
+** eldoc
+Eldoc specific
+#+begin_src emacs-lisp
+(use-package eldoc-cmake
+  :ensure t
+  :hook (cmake-mode . eldoc-cmake-enable))
 #+end_src
 
 ** glsl-mode
@@ -294,8 +326,6 @@ Using company-mode and ensuring it gets activitated along side other major modes
   (c-mode . company-mode)
   (c++-mode . company-mode)
   (cmake-mode . company-mode)
-  ;;(csharp-mode . company-mode)
-  ;;(dart-mode . company-mode)
   )
 (use-package company-box
   :hook (company-mode . company-box-mode))
@@ -327,6 +357,14 @@ minimalistic and emacs native using the completion-at-point-funciton.
 (use-package markdown-mode
   :ensure t)
 #+end_src
+* COMMENT Gnuplot
+
+#+begin_src emacs-lisp
+(use-package gnuplot
+  :ensure t)
+(use-package gnuplot-mode
+  :ensure t)
+#+end_src
 
 * move-text
 I realy like the org-mode functionality to move lines of code with the
@@ -339,7 +377,6 @@ arrow key. This package enables me to use it in other major modes.
 #+end_src
 
 * Language
-
 ** langtool
 This packages uses to offline jar file of languagetool.
 #+begin_src emacs-lisp
@@ -351,7 +388,7 @@ This packages uses to offline jar file of languagetool.
   (langtool-default-language "en-GB"))
 #+end_src
 
-** flymake languagetool
+** COMMENT flymake languagetool
 In theory this should enable the use of the online API of languagetool
 but it does not work at the moment. I need to fix it.
 
@@ -513,20 +550,28 @@ have to kill the selection again.
 #+end_src
 
 * Recent files
-Keep a list fo recently opend files for faster access.
-#+begin_src emacs-lisp
+Keep a list fo recently opend files for faster access. Usually the
+recentf file is saved when emacs exits (specifically,
+`recentf-save-list` is called on `kill-emacs-hook`). When emacs exits
+abruptly this hook is not executed, this happens e.g. when emacs
+server runs on startup of an pc, but is not correctly closed on
+shutdown.
+ #+begin_src emacs-lisp
 ;; Recent files
 (use-package recentf
   :init
   (setq recentf-max-saved-items 200
-	recentf-max-menu-items 15)
-  (recentf-mode +1)
+        recentf-max-menu-items 15)
+  (recentf-mode 1)
+  
+;; Save the list every 5 minutes while Emacs is running
+  (run-at-time nil (* 5 60) #'recentf-save-list)
   :hook
   (after-init . recentf-open-files))
-(global-set-key (kbd "C-c r") #'recentf-open-files)
-;;(initial-buffer-choice 'recentf-open-files)
 
+(global-set-key (kbd "C-c r") #'recentf-open-files)
 #+end_src
+
 * AI/LLM
 LLM integration into emacs.
 
@@ -543,7 +588,7 @@ communicate with claude.
 (use-package agent-shell
   :ensure t)
 #+end_src
-* Deprecated Settings/packages
+* COMMENT Deprecated Settings/packages
 These are settings that were used once, because they had a use-case
 but were either replaced by a better solution or removed as the
 use-case no longer was applicable.
@@ -561,6 +606,15 @@ can apply them again when needed.
 ;; (use-package flutter
 ;;   :ensure t
 ;;   :after dart-mode)
+
+;;(use-package eglot
+;;(csharp-mode . eglot-ensure)
+;;(dart-mode . eglot-ensure)
+;;:custom
+;;(add-to-list 'eglot-server-programs '(csharp-mode . ("OmniSharp.exe" "-lsp")))
+;;dart eglot config
+;;(add-to-list 'eglot-server-programs '(dart-mode . ("dart" "language-server")))
+)
 
 ;;Yaml-mode
 (use-package yaml-mode
