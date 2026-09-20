@@ -1,6 +1,6 @@
 #+TITLE: Emacs Setup file
 #+AUTHOR: Simon Engel
-#+PROPERTY: header-args :tangle ...\\.emacs.d\\init.el
+#+PROPERTY: header-args :tangle ~/.emacs.d/init.el
 #+STARTUP: overview
 
 * Introduction
