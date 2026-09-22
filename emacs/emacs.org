@@ -83,8 +83,11 @@ This section covers the appearance changing settings.
 
 #+begin_src emacs-lisp
 (use-package kanagawa-themes
-  :ensure t)
-(load-theme 'kanagawa-wave :no-confirm)
+  :ensure t
+  :config
+  (load-theme 'kanagawa-wave :no-confirm)
+  (set-face-attribute 'comint-highlight-prompt nil :background 'unspecified) ;; fix for agent-shell face bleed
+  )
 #+end_src
 
 #+begin_src emacs-lisp :tangle no
