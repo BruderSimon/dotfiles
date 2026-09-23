@@ -298,6 +298,12 @@ the moment.
   (add-to-list 'eglot-server-programs '(cuda-mode "clangd"))
   )
 #+end_src
+** project.el
+I need a specific configuration for project.el projects.
+#+begin_src emacs-lisp
+(with-eval-after-load 'project
+  (add-to-list 'project-vc-extra-root-markers ".project.el"))
+#+end_src
 ** eldoc
 Eldoc specific
 #+begin_src emacs-lisp

@@ -2,7 +2,7 @@
 ---- KEYBINDINGS ----
 ---------------------
 
-local vars = 
+local variables = require("variables")
 
 local mainMod = "SUPER"
 
