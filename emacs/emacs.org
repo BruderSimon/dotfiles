@@ -138,8 +138,24 @@ Changing the behaviour of Emacs
 
 ;; Don't create backupfiles
 (setq make-backup-files nil)
+#+end_src
 
-;; Always split vertically
+
+** COMMENT Window Behavior
+#+begin_src emacs-lisp
+
+;; Better Window Splitting
+(defun my-split-window-for-display (window)
+  (let ((selected (selected-window)))
+    (with-selected-window selected
+      (if (one-window-p t)
+          (when (window-splittable-p selected t)
+            (split-window-right))
+        (when (window-splittable-p selected)
+          (split-window-below))))))
+
+(setq split-window-preferred-function #'my-split-window-for-display)
+(setq split-window-preferred-direction 'vertical)
 (setq split-width-threshold 160)
 (setq split-height-threshold 80)
 #+end_src
