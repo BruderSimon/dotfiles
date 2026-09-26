@@ -8,9 +8,9 @@ return {
     programs = {
         terminal    = "kitty",
         fileManager = "dolphin",
-        editor      = 'emacsclient -c -e "(fancy-startup-screen)" --socket-name=Hyprland',
+        editor      = " emacs" ,
         browser     = "firefox",
-        menu        = "wofi --show drun",
+	private     = "firefox --private-window",
     },
     colors = {
 	-- Bg Shades

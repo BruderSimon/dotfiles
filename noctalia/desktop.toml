@@ -1,0 +1,34 @@
+[wallpaper]
+enabled             = true
+fill_mode           = "crop"    # center | crop | fit | stretch | repeat | span
+fill_color          = "#111111" # optional fallback/fill color; image wallpapers take priority
+
+directory           = "~/.config/Wallpaper"
+
+# Enable per-monitor directory overrides (default: false)
+per_monitor_directories = false
+
+[wallpaper.default]
+path = "~/.config/Wallpaper/RanmaSaotome.png"
+
+[desktop_widgets]
+enabled = true
+schema_version = 2
+widget_order = ["clock_main"]
+
+[desktop_widgets.grid]
+visible               = true
+cell_size             = 16
+major_interval        = 4
+
+[desktop_widgets.widget.clock_main]
+type     = "clock"
+output   = "DP-1"
+cx       = 960.0
+cy       = 540.0
+box_width  = 0.0
+box_height = 0.0
+rotation = 0.0
+
+[desktop_widgets.widget.clock_main.settings]
+format = "{:%H:%M}"

@@ -141,7 +141,7 @@ Changing the behaviour of Emacs
 #+end_src
 
 
-** COMMENT Window Behavior
+** Window Behavior
 #+begin_src emacs-lisp
 
 ;; Better Window Splitting
@@ -350,16 +350,17 @@ Using company-mode and ensuring it gets activitated along side other major modes
   (c-mode . company-mode)
   (c++-mode . company-mode)
   (cmake-mode . company-mode)
+  (lua-mode . company-mode)
   )
 (use-package company-box
   :hook (company-mode . company-box-mode))
 
 #+end_src
 
-** Corfu
+** COMMENT Corfu
 Corfu is a in-buffer completion packaged. It is supposed to be
 minimalistic and emacs native using the completion-at-point-funciton.
-#+begin_src emacs-lisp :tangle no
+#+begin_src emacs-lisp
 (use-package corfu
   :ensure t
   :hook
