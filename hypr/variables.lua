@@ -7,8 +7,8 @@
 return {
     programs = {
         terminal    = "kitty",
-        fileManager = "dolphin",
-        editor      = " emacs" ,
+        fileManager = "emacsclient -c --eval \"(dirvish)\"",
+        editor      = "emacsclient -c --eval \"(fancy-startup-screen)\"",
         browser     = "firefox",
 	private     = "firefox --private-window",
     },

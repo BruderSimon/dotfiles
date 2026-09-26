@@ -140,7 +140,6 @@ Changing the behaviour of Emacs
 (setq make-backup-files nil)
 #+end_src
 
-
 ** Window Behavior
 #+begin_src emacs-lisp
 
@@ -250,6 +249,30 @@ Functionality to collapse code functions/classes if wanted
 
 #+end_src
 
+* Dired
+I want to try out dirvish to see if it has some advantages over
+dired. I like the simplicity of dired but until now i always switched
+to a separate graphical file manager if I needed to move files
+around. So lets see if I can ditch one for dired/dirvish.
+#+begin_src emacs-lisp
+(use-package nerd-icons); icons for dirvish, needs a Nerd Font
+
+(use-package dirvish
+  :init (dirvish-override-dired-mode)   ; every dired buffer becomes dirvish
+  :custom
+  (dired-listing-switches "--almost-all --human-readable -l --group-directories-first")
+  (dirvish-attributes '(nerd-icons file-size file-time subtree-state vc-state collapse))
+  (dirvish-default-layout '(1 0.11 0.55)) ; M-x dirvish: no parent, list, big preview
+  :bind (:map dirvish-mode-map
+	      ("<left>"  . dired-up-directory)
+              ("TAB"     . dirvish-subtree-toggle)
+              ("a"       . dirvish-quick-access)
+              ("f"       . dirvish-file-info-menu)
+              ("s"       . dirvish-quicksort)
+              ("v"       . dirvish-vc-menu)
+              ("M-l"     . dirvish-ls-switches-menu)
+              ("?"       . dirvish-dispatch)))
+#+end_src
 * Programming
 ** cc-mode style
 Coding style for cc-modes

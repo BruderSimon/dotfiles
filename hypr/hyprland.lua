@@ -19,12 +19,9 @@ hl.monitor({
 
 hl.on("hyprland.start", function()
 	  hl.exec_cmd("noctalia")
-	  -- hl.exec_cmd("emacs --deamon=Hyprland")
+	  hl.exec_cmd("systemctl --user start emacs")
 end)
 
--- hl.on("hyprland.shutdown", function()
--- 	  hl.exec_cmd('emacsclient -e "(save-buffers-kill-emacs)" && sleep 1')
--- end)
 -------------------------------
 ---- ENVIRONMENT VARIABLES ----
 -------------------------------
