@@ -273,6 +273,18 @@ around. So lets see if I can ditch one for dired/dirvish.
               ("M-l"     . dirvish-ls-switches-menu)
               ("?"       . dirvish-dispatch)))
 #+end_src
+
+#+begin_src emacs-lisp
+(defun my-dired-open-in-mpv ()
+  "Open the current file in mpv asynchronously."
+  (interactive)
+  (let ((file (dired-get-file-for-visit)))
+    (start-process "mpv-process" nil "mpv" file)))
+
+;; Bind it to 'P' inside Dirvish/Dired mode
+(with-eval-after-load 'dired
+  (define-key dired-mode-map (kbd "P") #'my-dired-open-in-mpv))
+#+end_src
 * Programming
 ** cc-mode style
 Coding style for cc-modes
