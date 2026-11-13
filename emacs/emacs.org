@@ -293,6 +293,32 @@ around. So lets see if I can ditch one for dired/dirvish.
   (define-key dired-mode-map (kbd "P") #'my-dired-open-in-mpv))
 #+end_src
 * Programming
+** tree-sitter
+#+begin_src emacs-lisp
+(use-package treesit
+  :ensure nil
+  :when (treesit-available-p)
+  :init
+  ;; Define the official GitHub repositories for C and C++ grammars
+  (setq treesit-language-source-alist
+        '((c "https://github.com/tree-sitter/tree-sitter-c")
+          (cpp "https://github.com/tree-sitter/tree-sitter-cpp")))
+
+  ;; Automatically install missing grammars on startup
+  (dolist (lang '(c cpp))
+    (unless (treesit-language-available-p lang)
+      (treesit-install-language-grammar lang)))
+
+  ;; Remap standard C/C++ modes to Tree-sitter modes
+  (setq major-mode-remap-alist
+        '((c-mode . c-ts-mode)
+          (c++-mode . c++-ts-mode)
+          (c-or-c++-mode . c-or-c++-ts-mode)))
+  
+  (setq treesit-font-lock-level 4)
+  (setq c-ts-mode-indent-style 'linux
+      c-ts-mode-indent-offset 4))
+#+end_src
 ** cc-mode style
 Coding style for cc-modes
 #+begin_src emacs-lisp
@@ -382,28 +408,6 @@ the moment.
   :init
   (add-to-list 'auto-mode-alist '("\\.fx\\'" . glsl-mode)))
 #+end_src
-** tree-sitter
-#+begin_src emacs-lisp
-(use-package treesit
-  :ensure nil
-  :when (treesit-available-p)
-  :init
-  ;; Define the official GitHub repositories for C and C++ grammars
-  (setq treesit-language-source-alist
-        '((c "https://github.com/tree-sitter/tree-sitter-c")
-          (cpp "https://github.com/tree-sitter/tree-sitter-cpp")))
-
-  ;; Automatically install missing grammars on startup
-  (dolist (lang '(c cpp))
-    (unless (treesit-language-available-p lang)
-      (treesit-install-language-grammar lang)))
-
-  ;; Remap standard C/C++ modes to Tree-sitter modes
-  (setq major-mode-remap-alist
-        '((c-mode . c-ts-mode)
-          (c++-mode . c++-ts-mode)
-          (c-or-c++-mode . c-or-c++-ts-mode))))
-#+end_src
 * Auto Complete
 ** company-mode
 Using company-mode and ensuring it gets activitated along side other major modes
@@ -411,12 +415,8 @@ Using company-mode and ensuring it gets activitated along side other major modes
 (use-package company
   :ensure t
   :pin gnu
-  :hook
-  (c-mode . company-mode)
-  (c++-mode . company-mode)
-  (cmake-mode . company-mode)
-  (lua-mode . company-mode)
-  )
+  :hook (prog-mode . company-mode))
+
 (use-package company-box
   :hook (company-mode . company-box-mode))
 
