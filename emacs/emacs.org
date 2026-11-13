@@ -24,12 +24,19 @@ Initializing packages
 #+end_src
 
 ** package-archives
-Using melpa, elpa and org-mode elpa
+Using GNU elpa, NonGNU elpa, and MELPA
 
 #+begin_src emacs-lisp
-(setq package-archives '(("melpa" . "https://melpa.org/packages/")
+(setq package-archives '(("gnu" . "https://elpa.gnu.org/packages/")
 			 ("nongnu" . "https://elpa.nongnu.org/nongnu/")
-                         ("elpa" . "https://elpa.gnu.org/packages/")))
+			 ("melpa" . "https://melpa.org/packages/")))
+
+;; Prefer stable GNU/NonGNU releases unless overridden with :pin
+(setq package-archive-priorities
+      '(("gnu"    . 99)
+        ("nongnu" . 80)
+        ("melpa"  . 50)))
+
 (package-initialize)
 (unless package-archive-contents
   (package-refresh-contents))
@@ -403,7 +410,7 @@ Using company-mode and ensuring it gets activitated along side other major modes
 #+begin_src emacs-lisp
 (use-package company
   :ensure t
-  :pin elpa
+  :pin gnu
   :hook
   (c-mode . company-mode)
   (c++-mode . company-mode)
