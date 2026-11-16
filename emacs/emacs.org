@@ -389,14 +389,13 @@ I need a specific configuration for project.el projects.
 #+end_src
 ** eglot
 Eglot is the LSP client that I use. The usage is pretty straight
-forward. Some languages are commented out as I don't require them at
-the moment.
+forward.
 #+begin_src emacs-lisp
 ;;eglot
 (use-package eglot
   :ensure nil
   :hook
-  ((c-mode c++-mode cuda-mode lua-mode) . eglot-ensure)
+  ((c-mode c-ts-mode c++-mode c++-ts-mode cuda-mode lua-mode) . eglot-ensure)
   :config
   (add-to-list 'eglot-server-programs '(cuda-mode "clangd"))
   )
